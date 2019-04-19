@@ -5,12 +5,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 //final Set<Marker> _markers = {};
 Set<Marker> _markers = {};
 
-class myMapWidget extends StatefulWidget {
+class MyMapWidget extends StatefulWidget {
   @override
-  State<myMapWidget> createState() => myMapWidgetState();
+  State<MyMapWidget> createState() => MyMapWidgetState();
 }
 
-class myMapWidgetState extends State<myMapWidget> {
+class MyMapWidgetState extends State<MyMapWidget> {
   Completer<GoogleMapController> _controller = Completer();
 
   static const CameraPosition NNov = const CameraPosition(
@@ -26,6 +26,7 @@ class myMapWidgetState extends State<myMapWidget> {
 
   @override
   Widget build(BuildContext context) {
+    getMarkers();
     return new Scaffold(
       body: GoogleMap(
         onTap: _onTap,
@@ -40,7 +41,8 @@ class myMapWidgetState extends State<myMapWidget> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _onAddMarkerButtonPressed,
         label: Text('Add marker!'),
-        icon: const Icon(Icons.add_location, size: 36.0),//Icon(Icons.directions_boat),
+        icon: const Icon(Icons.add_location,
+            size: 36.0), //Icon(Icons.directions_boat),
       ),
     );
   }
@@ -57,18 +59,6 @@ class myMapWidgetState extends State<myMapWidget> {
   }
 
   void _onAddMarkerButtonPressed() {
-
-
-    var myDescriptor = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow);
-
-    bool ifGreen = false;
-
-    if(ifGreen){
-      myDescriptor = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
-    } else {
-      myDescriptor = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
-    }
-
     setState(() {
       _markers.add(Marker(
         // This marker id can be anything that uniquely identifies each marker.
@@ -78,7 +68,7 @@ class myMapWidgetState extends State<myMapWidget> {
           title: 'One nore issue',
           snippet: '3 people signed',
         ),
-        icon: myDescriptor,
+        icon: BitmapDescriptor.defaultMarker,
       ));
     });
   }
@@ -86,31 +76,70 @@ class myMapWidgetState extends State<myMapWidget> {
   Future<void> getMarkers() async {
     //TODO get rest markers then setState(){}
     //getMarker
-//    Set<Marker> gotMarkers;
-//
-//    setState(() {
-//      _markers.clear();
-//      for(var marker in gotMarkers){
-//        _markers.add(Marker(
-//          // This marker id can be anything that uniquely identifies each marker.
-//          markerId: MarkerId(marker.id.toString()),
-//          position: marker.position,
-//          infoWindow: InfoWindow(
-//            title: 'Really cool place',
-//            snippet: '5 Star Rating',
-//          ),
-//          icon: BitmapDescriptor.defaultMarker
-////          icon: BitmapDescriptor.defaultMarker,
-//        ));
-//      };
-//    });
-//
-//    print("");
+    Set<MyTask> fetchedTasks = Set<MyTask>();
+
+    LatLng position1 = LatLng(56.327752241668215, 44.00208346545696);
+    LatLng position2 = LatLng(56.337752241668215, 44.00208346545696);
+
+    fetchedTasks
+        .add(MyTask.defaultClass('1234', position1, 'title', 'snippet'));
+    fetchedTasks
+        .add(MyTask.defaultClass('5678', position2, 'TITLE', 'lil snippet'));
+
+    setState(() {
+      _markers.clear();
+      for (var task in fetchedTasks) {
+        var myDescriptor =
+            BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow);
+
+        if (task is GoodTask) {
+          myDescriptor =
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
+        }
+
+        if (task is BadTask) {
+          myDescriptor = BitmapDescriptor.defaultMarker;
+        }
+
+        _markers.add(Marker(
+            markerId: MarkerId(task.id),
+            position: task.position,
+            infoWindow: InfoWindow(
+              title: task.title,
+              snippet: task.snippet,
+            ),
+            icon: myDescriptor
+//          icon: BitmapDescriptor.defaultMarker,
+            ));
+      }
+    });
   }
+}
 
-//  void printPosition() {
-//    print(_lastMapPosition);
-//  }
+class MyTask {
+  MyTask();
+
+  MyTask.defaultClass(this.id, this.position, this.title, this.snippet);
+
+  //MyTask(this.id, this.position, this.title, this.snippet);
+
+  bool isGood = false;
+  String title = 'default title';
+  String snippet = 'default snippet';
+  String id = '1234567890';
+
+  LatLng position = LatLng(56.327752241668215, 44.00208346545696);
+}
+
+class GoodTask extends MyTask {
+
+  GoodTask(String id, LatLng position, String title, String snippet)
+      : super.defaultClass(id, position, title, snippet);
 
 
+}
+
+class BadTask extends MyTask {
+  BadTask(String id, LatLng position, String title, String snippet)
+      : super.defaultClass(id, position, title, snippet);
 }
