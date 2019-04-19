@@ -1,5 +1,7 @@
 # gch_cityservice
 
+[![Build Status](https://travis-ci.org/CoolONEOfficial/gch_cityservice.svg?branch=master)](https://travis-ci.org/CoolONEOfficial/gch_cityservice)
+
 GCH Cityservice application.
 
 ## Getting Started

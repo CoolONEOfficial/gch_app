@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:gch_cityservice/bottom_drawer.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 //final Set<Marker> _markers = {};
@@ -49,12 +48,12 @@ class MyMapWidgetState extends State<MyMapWidget> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _onAddMarkerButtonPressed,
         label: Text('Add marker!'),
-        icon: const Icon(Icons.add_location,
-            size: 36.0), //Icon(Icons.directions_boat),
+        icon: const Icon(
+          Icons.add_location,
+          size: 36.0,
+        ), //Icon(Icons.directions_boat),
       ),
     );
-    getMarkers();
-    return w;
   }
 
   Future<void> _onTap(LatLng tapPos) async {
@@ -85,8 +84,6 @@ class MyMapWidgetState extends State<MyMapWidget> {
   }
 
   void getMarkers() {
-    //TODO get rest markers then setState(){}
-    //getMarker
     Set<MyTask> fetchedTasks = Set<MyTask>();
 
     LatLng position1 = LatLng(56.327752241668215, 44.00208346545696);
@@ -148,11 +145,8 @@ class MyTask {
 }
 
 class GoodTask extends MyTask {
-
   GoodTask(String id, LatLng position, String title, String snippet)
       : super.defaultClass(id, position, title, snippet);
-
-
 }
 
 class BadTask extends MyTask {
