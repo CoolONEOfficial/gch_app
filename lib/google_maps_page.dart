@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:gch_cityservice/bottom_drawer.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 //final Set<Marker> _markers = {};
@@ -24,20 +25,27 @@ class MyMapWidgetState extends State<MyMapWidget> {
     _lastCameraPosition = position;
   }
 
+  Widget bottomDrawerPanel = BottomDrawerCard(MyTask());
+
   @override
   Widget build(BuildContext context) {
-    getMarkers();
-    return new Scaffold(
-      body: GoogleMap(
-        onTap: _onTap,
-        onCameraMove: _onCameraMove,
-        markers: _markers,
-        mapType: MapType.normal,
-        initialCameraPosition: NNov,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-      ),
+    Widget w = Scaffold(
+      body: Stack(
+        children: <Widget>[
+          GoogleMap(
+            onTap: _onTap,
+            onCameraMove: _onCameraMove,
+            markers: _markers,
+            mapType: MapType.normal,
+            initialCameraPosition: NNov,
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+            },
+          ),
+          bottomDrawerPanel,
+        ],
+      )
+      ,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _onAddMarkerButtonPressed,
         label: Text('Add marker!'),
@@ -45,6 +53,8 @@ class MyMapWidgetState extends State<MyMapWidget> {
             size: 36.0), //Icon(Icons.directions_boat),
       ),
     );
+    getMarkers();
+    return w;
   }
 
   Future<void> _onTap(LatLng tapPos) async {
@@ -60,7 +70,8 @@ class MyMapWidgetState extends State<MyMapWidget> {
 
   void _onAddMarkerButtonPressed() {
     setState(() {
-      _markers.add(Marker(
+      _markers.add(
+          Marker(
         // This marker id can be anything that uniquely identifies each marker.
         markerId: MarkerId(_lastCameraPosition.target.toString()),
         position: _lastCameraPosition.target,
@@ -73,7 +84,7 @@ class MyMapWidgetState extends State<MyMapWidget> {
     });
   }
 
-  Future<void> getMarkers() async {
+  void getMarkers() {
     //TODO get rest markers then setState(){}
     //getMarker
     Set<MyTask> fetchedTasks = Set<MyTask>();
@@ -87,7 +98,7 @@ class MyMapWidgetState extends State<MyMapWidget> {
         .add(MyTask.defaultClass('5678', position2, 'TITLE', 'lil snippet'));
 
     setState(() {
-      _markers.clear();
+      //_markers.clear();
       for (var task in fetchedTasks) {
         var myDescriptor =
             BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow);
@@ -97,7 +108,7 @@ class MyMapWidgetState extends State<MyMapWidget> {
               BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
         }
 
-        if (task is BadTask) {
+        else if (task is BadTask) {
           myDescriptor = BitmapDescriptor.defaultMarker;
         }
 
@@ -107,6 +118,11 @@ class MyMapWidgetState extends State<MyMapWidget> {
             infoWindow: InfoWindow(
               title: task.title,
               snippet: task.snippet,
+              onTap: ()=>{
+                setState((){
+                  bottomDrawerPanel = BottomDrawerCard(task);
+              })
+              }
             ),
             icon: myDescriptor
 //          icon: BitmapDescriptor.defaultMarker,
