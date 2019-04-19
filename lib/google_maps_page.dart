@@ -2,87 +2,115 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-final Set<Marker> _markers = {};
+//final Set<Marker> _markers = {};
+Set<Marker> _markers = {};
 
-class GooglePage extends StatelessWidget {
+class myMapWidget extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Google Maps Demo',
-      home: MapSample(),
-    );
-  }
+  State<myMapWidget> createState() => myMapWidgetState();
 }
 
-class MapSample extends StatefulWidget {
-  @override
-  State<MapSample> createState() => MapSampleState();
-}
-
-class MapSampleState extends State<MapSample> {
+class myMapWidgetState extends State<myMapWidget> {
   Completer<GoogleMapController> _controller = Completer();
-  static const LatLng _center = const LatLng(45.521563, -122.677433);
 
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
+  static const CameraPosition NNov = const CameraPosition(
+    target: LatLng(56.327752241668215, 44.00208346545696),
+    zoom: 14,
   );
 
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
-
-  LatLng _lastMapPosition = _center;
+  CameraPosition _lastCameraPosition = NNov;
 
   void _onCameraMove(CameraPosition position) {
-    _lastMapPosition = position.target;
+    _lastCameraPosition = position;
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       body: GoogleMap(
+        onTap: _onTap,
         onCameraMove: _onCameraMove,
         markers: _markers,
         mapType: MapType.normal,
-        initialCameraPosition: _kGooglePlex,
+        initialCameraPosition: NNov,
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _onAddMarkerButtonPressed,
-        label: Text('To the lake!'),
+        label: Text('Add marker!'),
         icon: const Icon(Icons.add_location, size: 36.0),//Icon(Icons.directions_boat),
       ),
     );
   }
 
-  Future<void> _goToTheLake() async {
+  Future<void> _onTap(LatLng tapPos) async {
+    final CameraPosition newPos = CameraPosition(
+      target: tapPos,
+      zoom: _lastCameraPosition.zoom,
+      bearing: _lastCameraPosition.bearing,
+      tilt: _lastCameraPosition.tilt,
+    );
     final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+    controller.animateCamera(CameraUpdate.newCameraPosition(newPos));
   }
 
   void _onAddMarkerButtonPressed() {
+
+
+    var myDescriptor = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow);
+
+    bool ifGreen = false;
+
+    if(ifGreen){
+      myDescriptor = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
+    } else {
+      myDescriptor = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+    }
+
     setState(() {
       _markers.add(Marker(
         // This marker id can be anything that uniquely identifies each marker.
-        markerId: MarkerId(_lastMapPosition.toString()),
-        position: _lastMapPosition,
+        markerId: MarkerId(_lastCameraPosition.target.toString()),
+        position: _lastCameraPosition.target,
         infoWindow: InfoWindow(
-          title: 'Really cool place',
-          snippet: '5 Star Rating',
+          title: 'One nore issue',
+          snippet: '3 people signed',
         ),
-        icon: BitmapDescriptor.defaultMarker,
+        icon: myDescriptor,
       ));
     });
   }
 
   Future<void> getMarkers() async {
     //TODO get rest markers then setState(){}
+    //getMarker
+//    Set<Marker> gotMarkers;
+//
+//    setState(() {
+//      _markers.clear();
+//      for(var marker in gotMarkers){
+//        _markers.add(Marker(
+//          // This marker id can be anything that uniquely identifies each marker.
+//          markerId: MarkerId(marker.id.toString()),
+//          position: marker.position,
+//          infoWindow: InfoWindow(
+//            title: 'Really cool place',
+//            snippet: '5 Star Rating',
+//          ),
+//          icon: BitmapDescriptor.defaultMarker
+////          icon: BitmapDescriptor.defaultMarker,
+//        ));
+//      };
+//    });
+//
+//    print("");
   }
+
+//  void printPosition() {
+//    print(_lastMapPosition);
+//  }
 
 
 }
