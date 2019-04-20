@@ -44,13 +44,11 @@ flutter:
   fonts:
   - family: BebasNeue
     fonts:
-    - asset: assets/fonts/Raleway-Regular.ttf
-    - asset: assets/fonts/Raleway-Italic.ttf
-      style: italic
-    - asset: assets/fonts/RobotoMono-Bold.ttf
-      weight: 700
-    - asset: assets/fonts/RobotoMono-Light.ttf
-      weight: 300
+    - asset: assets/fonts/BebasNeue-Regular.ttf
+    - asset: assets/fonts/BebasNeue-Thin.ttf
+    - asset: assets/fonts/BebasNeue-Bold.ttf
+    - asset: assets/fonts/BebasNeue-Book.ttf
+    - asset: assets/fonts/BebasNeue-Light.ttf
 
   assets:
   - assets/images/map-marker-green.png

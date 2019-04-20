@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:gch_cityservice/bottom_drawer.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 //final Set<Marker> _markers = {};
@@ -28,7 +29,7 @@ class MyMapWidgetState extends State<MyMapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Widget w = Scaffold(
+    return Scaffold(
       body: Stack(
         children: <Widget>[
           GoogleMap(
