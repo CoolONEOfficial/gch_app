@@ -28,6 +28,12 @@ class MyMapWidgetState extends State<MyMapWidget> {
   Widget bottomDrawerPanel = BottomDrawerCard(MyTask());
 
   @override
+  void initState() {
+    super.initState();
+    getTasks();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
@@ -40,12 +46,17 @@ class MyMapWidgetState extends State<MyMapWidget> {
             initialCameraPosition: NNov,
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
+
+              //controller.onMarkerTapped.add(_onMarkerTap(task));
             },
           ),
-          bottomDrawerPanel,
+          StreamBuilder(
+            initialData: MyTask(),
+            stream: taskBloc.stream,
+            builder: (context, snapshot) => BottomDrawerCard(snapshot.data),
+          ),
         ],
-      )
-      ,
+      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _onAddMarkerButtonPressed,
         label: Text('Add marker!'),
@@ -70,8 +81,7 @@ class MyMapWidgetState extends State<MyMapWidget> {
 
   void _onAddMarkerButtonPressed() {
     setState(() {
-      _markers.add(
-          Marker(
+      _markers.add(Marker(
         // This marker id can be anything that uniquely identifies each marker.
         markerId: MarkerId(_lastCameraPosition.target.toString()),
         position: _lastCameraPosition.target,
@@ -84,7 +94,11 @@ class MyMapWidgetState extends State<MyMapWidget> {
     });
   }
 
-  void getMarkers() {
+  _onMarkerTap(MyTask task) {
+    taskBloc.add(task);
+  }
+
+  void getTasks() {
     Set<MyTask> fetchedTasks = Set<MyTask>();
 
     LatLng position1 = LatLng(56.327752241668215, 44.00208346545696);
@@ -104,9 +118,7 @@ class MyMapWidgetState extends State<MyMapWidget> {
         if (task is GoodTask) {
           myDescriptor =
               BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
-        }
-
-        else if (task is BadTask) {
+        } else if (task is BadTask) {
           myDescriptor = BitmapDescriptor.defaultMarker;
         }
 
@@ -116,12 +128,8 @@ class MyMapWidgetState extends State<MyMapWidget> {
             infoWindow: InfoWindow(
               title: task.title,
               snippet: task.snippet,
-              onTap: ()=>{
-                setState((){
-                  bottomDrawerPanel = BottomDrawerCard(task);
-              })
-              }
             ),
+            onTap: () => _onMarkerTap(task),
             icon: myDescriptor
 //          icon: BitmapDescriptor.defaultMarker,
             ));
@@ -154,3 +162,5 @@ class BadTask extends MyTask {
   BadTask(String id, LatLng position, String title, String snippet)
       : super.defaultClass(id, position, title, snippet);
 }
+
+final taskBloc = StreamController<MyTask>.broadcast();
