@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gch_cityservice/pages/google_maps_page.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:gch_cityservice/pages/section_list_page.dart';
 import 'package:gch_cityservice/services/authentication.dart';
+import 'package:gch_cityservice/widget_templates.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 int activeScreen = 0;
@@ -40,12 +42,12 @@ class _HomeScreenState extends State<HomeScreen> {
     _checkEmailVerification().then((result) {
       databaseReference.child("tasks").onValue.listen(
         (event) {
-          var tasks = event?.snapshot?.value;
+          var _tasks = event?.snapshot?.value;
 
           Set<MyTask> set = Set<MyTask>();
 
-          for (int taskId = 0; taskId < tasks.length; taskId++) {
-            var task = tasks[taskId];
+          for (int taskId = 0; taskId < _tasks.length; taskId++) {
+            var task = _tasks[taskId];
 
             set.add(
               MyTask.defaultClass(
@@ -59,6 +61,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             );
           }
+
+          tasksSet = set;
 
           taskBloc.add(set);
         },
@@ -152,18 +156,21 @@ class _HomeScreenState extends State<HomeScreen> {
     return Drawer(
       child: Column(
         children: <Widget>[
-          UserAccountsDrawerHeader(
-            accountName: Text("Ashish Rawat"),
-            accountEmail: Text("ashishrawat2911@gmail.com"),
-            currentAccountPicture: CircleAvatar(
-              backgroundColor: Theme.of(context).platform == TargetPlatform.iOS
-                  ? Colors.blue
-                  : Colors.white,
-              child: Text(
-                "A",
-                style: TextStyle(fontSize: 40.0),
-              ),
-            ),
+          buildFutureBuilder(
+            context,
+            future: firebaseAuth.currentUser(),
+            builder: (ctx, snapshot) {
+              return UserAccountsDrawerHeader(
+                  accountName: Text(snapshot.data.displayName ?? "Unknown name"),
+                  accountEmail: Text(snapshot.data.email ?? "unknown@mail.com"),
+                  currentAccountPicture: CircleAvatar(
+                    backgroundColor:
+                        Theme.of(context).platform == TargetPlatform.iOS
+                            ? Colors.blue
+                            : Colors.white,
+                    child: Image.network(snapshot.data.photoUrl ?? "http://www.sclance.com/pngs/image-placeholder-png/image_placeholder_png_698411.png"),
+                  ));
+            },
           ),
           ListTile(
             title: Text("Карта"),
@@ -237,4 +244,5 @@ class MyTask {
   }
 }
 
-final taskBloc = StreamController<Set<MyTask>>.broadcast();
+Set<MyTask> tasksSet = Set();
+final taskBloc = StreamController<void>.broadcast();

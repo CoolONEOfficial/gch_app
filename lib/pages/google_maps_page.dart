@@ -30,12 +30,12 @@ class MyMapWidgetState extends State<MyMapWidget> {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        StreamBuilder<Set<MyTask>>(
+        StreamBuilder(
             stream: taskBloc.stream,
             builder: (context, snapshot) => GoogleMap(
                   onTap: _onTap,
                   onCameraMove: _onCameraMove,
-                  markers: snapshot.data
+                  markers: tasksSet
                           ?.map(
                             (task) => task.toMarker(),
                           )

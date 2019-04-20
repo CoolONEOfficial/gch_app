@@ -2,7 +2,7 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
 
-exports.countlikechange = functions.database.ref('/tasks/{postid}/votes').onUpdate(
+exports.countlikechange = functions.database.ref('/tasks/').onUpdate(
     async (change, context) => {
         // Only edit data when it is first created.
         if (change.before.exists()) {
