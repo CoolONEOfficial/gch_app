@@ -13,7 +13,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         fontFamily: 'BebasNeue'
       ),
-      home: MyMapWidget()
+      home: Scaffold(
+        body: MyMapWidget(),
+      )
+      //MyMapWidget()
       ///MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }

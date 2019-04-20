@@ -41,13 +41,11 @@ class MyMapWidgetState extends State<MyMapWidget> {
               initialCameraPosition: NNov,
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
-
-                //controller.onMarkerTapped.add(_onMarkerTap(task));
               },
             )),
         StreamBuilder(
           initialData: MyTask(),
-          stream: taskBloc.stream,
+          stream: bottomCardBloc.stream,
           builder: (context, snapshot) => BottomDrawerCard(snapshot.data),
         ),
       ],
@@ -72,8 +70,6 @@ class MyTask {
   MyTask.defaultClass(this.id, this.position, this.title, this.snippet);
 
   //MyTask(this.id, this.position, this.title, this.snippet);
-
-  bool isGood = false;
   String title = 'default title';
   String snippet = 'default snippet';
   String id = '1234567890';
@@ -100,7 +96,7 @@ class MyTask {
 }
 
 _onMarkerTap(MyTask task) {
-  taskBloc.add(task);
+  bottomCardBloc.add(task);
 }
 
 class GoodTask extends MyTask {
@@ -113,4 +109,5 @@ class BadTask extends MyTask {
       : super.defaultClass(id, position, title, snippet);
 }
 
-final taskBloc = StreamController<MyTask>.broadcast();
+final bottomCardBloc = StreamController<MyTask>.broadcast();
+final taskBloc = StreamController<Set<MyTask>>.broadcast();
