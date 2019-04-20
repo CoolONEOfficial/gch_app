@@ -10,7 +10,7 @@ class BottomDrawerCard extends StatelessWidget {
 
 //  final double _initFabHeight = 120.0;
 ////  double _fabHeight;
-  double _panelHeightOpen = 575.0;
+  double _panelHeightOpen = 400.0;
   double _panelHeightClosed = 95.0;
 
   @override

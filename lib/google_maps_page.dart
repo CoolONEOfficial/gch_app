@@ -29,34 +29,29 @@ class MyMapWidgetState extends State<MyMapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        drawer: Drawer(),
-        appBar: AppBar(
-          title: Text("Task Map"),
-        ),
-        body: Stack(
-          children: <Widget>[
-            StreamBuilder(
-                stream: taskBloc.stream,
-                builder: (context, snapshot) => GoogleMap(
-                      onTap: _onTap,
-                      onCameraMove: _onCameraMove,
-                      markers: _markers,
-                      mapType: MapType.normal,
-                      initialCameraPosition: NNov,
-                      onMapCreated: (GoogleMapController controller) {
-                        _controller.complete(controller);
+    return Stack(
+      children: <Widget>[
+        StreamBuilder(
+            stream: taskBloc.stream,
+            builder: (context, snapshot) => GoogleMap(
+              onTap: _onTap,
+              onCameraMove: _onCameraMove,
+              markers: _markers,
+              mapType: MapType.normal,
+              initialCameraPosition: NNov,
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
 
-                        //controller.onMarkerTapped.add(_onMarkerTap(task));
-                      },
-                    )),
-            StreamBuilder(
-              initialData: MyTask(),
-              stream: taskBloc.stream,
-              builder: (context, snapshot) => BottomDrawerCard(snapshot.data),
-            ),
-          ],
-        ));
+                //controller.onMarkerTapped.add(_onMarkerTap(task));
+              },
+            )),
+        StreamBuilder(
+          initialData: MyTask(),
+          stream: taskBloc.stream,
+          builder: (context, snapshot) => BottomDrawerCard(snapshot.data),
+        ),
+      ],
+    );
   }
 
   Future<void> _onTap(LatLng tapPos) async {
