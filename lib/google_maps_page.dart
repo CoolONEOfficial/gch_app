@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gch_cityservice/bottom_drawer.dart';
-import 'package:gch_cityservice/main.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MyMapWidget extends StatefulWidget {
@@ -34,7 +33,12 @@ class MyMapWidgetState extends State<MyMapWidget> {
             builder: (context, snapshot) => GoogleMap(
                   onTap: _onTap,
                   onCameraMove: _onCameraMove,
-                  markers: snapshot.data.map((task) => task.toMarker()).toSet(),
+                  markers: snapshot.data
+                          ?.map(
+                            (task) => task.toMarker(),
+                          )
+                          ?.toSet() ??
+                      Set(),
                   mapType: MapType.normal,
                   initialCameraPosition: NNov,
                   onMapCreated: (GoogleMapController controller) {
