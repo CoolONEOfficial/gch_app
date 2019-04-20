@@ -36,6 +36,16 @@ class MyMapWidgetState extends State<MyMapWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(),
+      appBar: AppBar(
+        title: Text("Task Map"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.update),
+            onPressed: ()=>getTasks(),
+          )
+        ],
+      ),
       body: Stack(
         children: <Widget>[
           GoogleMap(
