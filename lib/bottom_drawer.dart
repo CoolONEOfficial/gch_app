@@ -3,7 +3,6 @@ import 'package:gch_cityservice/google_maps_page.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class BottomDrawerCard extends StatelessWidget {
-  //BottomDrawerCard();
 
   MyTask task;
 
