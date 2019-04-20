@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gch_cityservice/bottom_drawer.dart';
+import 'package:gch_cityservice/main.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-//final Set<Marker> _markers = {};
-Set<Marker> _markers = {};
 
 class MyMapWidget extends StatefulWidget {
   @override
@@ -31,18 +29,18 @@ class MyMapWidgetState extends State<MyMapWidget> {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        StreamBuilder(
+        StreamBuilder<Set<MyTask>>(
             stream: taskBloc.stream,
             builder: (context, snapshot) => GoogleMap(
-              onTap: _onTap,
-              onCameraMove: _onCameraMove,
-              markers: _markers,
-              mapType: MapType.normal,
-              initialCameraPosition: NNov,
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-              },
-            )),
+                  onTap: _onTap,
+                  onCameraMove: _onCameraMove,
+                  markers: snapshot.data.map((task) => task.toMarker()).toSet(),
+                  mapType: MapType.normal,
+                  initialCameraPosition: NNov,
+                  onMapCreated: (GoogleMapController controller) {
+                    _controller.complete(controller);
+                  },
+                )),
         StreamBuilder(
           initialData: MyTask(),
           stream: bottomCardBloc.stream,
@@ -69,16 +67,15 @@ class MyTask {
 
   MyTask.defaultClass(this.id, this.position, this.title, this.snippet);
 
-  //MyTask(this.id, this.position, this.title, this.snippet);
   String title = 'default title';
   String snippet = 'default snippet';
   String id = '1234567890';
 
   LatLng position = LatLng(56.327752241668215, 44.00208346545696);
 
-  Marker toMarker (){
+  Marker toMarker() {
     var myDescriptor =
-    BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow);
+        BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow);
 
     if (this is GoodTask) {
       myDescriptor =
@@ -87,11 +84,12 @@ class MyTask {
       myDescriptor = BitmapDescriptor.defaultMarker;
     }
 
-    _markers.add(Marker(
-        markerId: MarkerId(this.id),
-        position: this.position,
-        onTap: () => _onMarkerTap(this),
-        icon: myDescriptor));
+    return Marker(
+      markerId: MarkerId(this.id),
+      position: this.position,
+      onTap: () => _onMarkerTap(this),
+      icon: myDescriptor,
+    );
   }
 }
 

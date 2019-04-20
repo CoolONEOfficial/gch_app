@@ -3,22 +3,18 @@ const admin = require('firebase-admin');
 admin.initializeApp();
 
 exports.countlikechange = functions.database.ref('/tasks/{postid}/votes').onUpdate(
-    async (change) => {
-        const collectionRef = change.after.ref.parent;
-        const countRef = collectionRef.parent.child('likes_count');
-
-        let increment;
-        if (change.after.exists() && !change.before.exists()) {
-            increment = 1;
-        } else if (!change.after.exists() && change.before.exists()) {
-            increment = -1;
-        } else {
+    async (change, context) => {
+        // Only edit data when it is first created.
+        if (change.before.exists()) {
             return null;
         }
+        // Exit when the data is deleted.
+        if (!change.after.exists()) {
+            return null;
+        }
+        // Grab the current value of what was written to the Realtime Database.
+        const original = change.after.val();
+        console.log('blahblah ', context.params.pushId, original);
 
-        await countRef.transaction((current) => {
-            return (current || 0) + increment;
-        });
-        console.log('Counter updated.');
         return null;
     });
