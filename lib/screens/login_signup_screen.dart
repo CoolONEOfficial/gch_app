@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:gch_cityservice/services/authentication.dart';
 
-class LoginSignUpPage extends StatefulWidget {
-  LoginSignUpPage({this.auth, this.onSignedIn});
+class LoginSignUpScreen extends StatefulWidget {
+  LoginSignUpScreen({this.auth, this.onSignedIn});
 
   final BaseAuth auth;
   final VoidCallback onSignedIn;
 
   @override
-  State<StatefulWidget> createState() => _LoginSignUpPageState();
+  State<StatefulWidget> createState() => _LoginSignUpScreenState();
 }
 
 enum FormMode { LOGIN, SIGNUP }
 
-class _LoginSignUpPageState extends State<LoginSignUpPage> {
+class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
   final _formKey = GlobalKey<FormState>();
 
   String _email;

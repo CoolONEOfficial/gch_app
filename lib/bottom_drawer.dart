@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:gch_cityservice/pages/home_page.dart';
+import 'package:gch_cityservice/screens/home_screen.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class BottomDrawerCard extends StatelessWidget {
-
   MyTask task;
 
   BottomDrawerCard(this.task);
 
-//  final double _initFabHeight = 120.0;
-////  double _fabHeight;
   double _panelHeightOpen = 500.0;
   double _panelHeightClosed = 95.0;
 
   @override
   Widget build(BuildContext context) {
-
     return SlidingUpPanel(
       maxHeight: _panelHeightOpen,
       minHeight: _panelHeightClosed,
@@ -23,10 +19,9 @@ class BottomDrawerCard extends StatelessWidget {
       parallaxOffset: .5,
       panel: _panel(),
       borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(18.0), topRight: Radius.circular(18.0)),
-//      onPanelSlide: (double pos) => setState((){
-//        _fabHeight = pos * (_panelHeightOpen - _panelHeightClosed) + _initFabHeight;
-//      }),wds
+        topLeft: Radius.circular(18.0),
+        topRight: Radius.circular(18.0),
+      ),
     );
   }
 

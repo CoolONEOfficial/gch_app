@@ -1,12 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:gch_cityservice/google_maps_page.dart';
+import 'package:gch_cityservice/pages/google_maps_page.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:gch_cityservice/pages/root_page.dart';
+import 'package:gch_cityservice/pages/section_list_page.dart';
 import 'package:gch_cityservice/services/authentication.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:gch_cityservice/section_list.dart';
 
 int activeScreen = 0;
 
@@ -15,11 +14,11 @@ enum neededWidget { Section, AppBar }
 
 final List<List<Widget>> screens = [
   [MyMapWidget(), myMapAppBar()],
-  [SectionList(), myListAppBar()],
+  [SectionListPage(), myListAppBar()],
 ];
 
-class HomePage extends StatefulWidget {
-  HomePage({
+class HomeScreen extends StatefulWidget {
+  HomeScreen({
     Key key,
     this.auth,
     this.userId,
@@ -30,17 +29,17 @@ class HomePage extends StatefulWidget {
   final String userId;
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeScreenState extends State<HomeScreen> {
   bool _isEmailVerified = false;
 
   @override
   void initState() {
     _checkEmailVerification().then((result) {
       databaseReference.child("tasks").onValue.listen(
-            (event) {
+        (event) {
           var tasks = event?.snapshot?.value;
 
           Set<MyTask> set = Set<MyTask>();
@@ -140,28 +139,14 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) => MySection();
-}
-
-final databaseReference = FirebaseDatabase.instance.reference();
-
-class MySection extends StatefulWidget {
-  @override
-  State<MySection> createState() => MySectionState();
-}
-
-class MySectionState extends State<MySection> {
   int currentSectionID = sections.MyMap.index;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: screens[currentSectionID][neededWidget.Section.index],
-      appBar: screens[currentSectionID][neededWidget.AppBar.index],
-      drawer: drawer(context, activeScreen),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+        body: screens[currentSectionID][neededWidget.Section.index],
+        appBar: screens[currentSectionID][neededWidget.AppBar.index],
+        drawer: drawer(context, activeScreen),
+      );
 
   Drawer drawer(BuildContext context, int id) {
     return Drawer(
@@ -205,11 +190,21 @@ class MySectionState extends State<MySection> {
             trailing: Icon(Icons.add_circle),
             onTap: () {},
           ),
+          Divider(),
+          ListTile(
+            title: Text("Выйти"),
+            trailing: Icon(Icons.exit_to_app),
+            onTap: () {
+              _signOut();
+            },
+          ),
         ],
       ),
     );
   }
 }
+
+final databaseReference = FirebaseDatabase.instance.reference();
 
 class MyTask {
   MyTask();
@@ -224,7 +219,7 @@ class MyTask {
 
   Marker toMarker() {
     var myDescriptor =
-    BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow);
+        BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow);
 
     if (this is GoodTask) {
       myDescriptor =

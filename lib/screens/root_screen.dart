@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:gch_cityservice/main.dart';
-import 'package:gch_cityservice/pages/home_page.dart';
-import 'package:gch_cityservice/pages/login_signup_page.dart';
+import 'package:gch_cityservice/screens/home_screen.dart';
+import 'package:gch_cityservice/screens/login_signup_screen.dart';
 import 'package:gch_cityservice/services/authentication.dart';
 
-class RootPage extends StatefulWidget {
-  RootPage({this.auth});
+class RootScreen extends StatefulWidget {
+  RootScreen({this.auth});
 
   final BaseAuth auth;
 
   @override
-  State<StatefulWidget> createState() => _RootPageState();
+  State<StatefulWidget> createState() => _RootScreenState();
 }
 
 enum AuthStatus {
@@ -19,7 +19,7 @@ enum AuthStatus {
   LOGGED_IN,
 }
 
-class _RootPageState extends State<RootPage> {
+class _RootScreenState extends State<RootScreen> {
   AuthStatus authStatus = AuthStatus.NOT_DETERMINED;
   String _userId = "";
 
@@ -71,14 +71,14 @@ class _RootPageState extends State<RootPage> {
         return _buildWaitingScreen();
         break;
       case AuthStatus.NOT_LOGGED_IN:
-        return LoginSignUpPage(
+        return LoginSignUpScreen(
           auth: widget.auth,
           onSignedIn: _onLoggedIn,
         );
         break;
       case AuthStatus.LOGGED_IN:
         if (_userId.length > 0 && _userId != null) {
-          return HomePage(
+          return HomeScreen(
             userId: _userId,
             auth: widget.auth,
             onSignedOut: _onSignedOut,

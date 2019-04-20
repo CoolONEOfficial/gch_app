@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gch_cityservice/bottom_drawer.dart';
 import 'package:gch_cityservice/main.dart';
-import 'package:gch_cityservice/pages/home_page.dart';
+import 'package:gch_cityservice/screens/home_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MyMapWidget extends StatefulWidget {

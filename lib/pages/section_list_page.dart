@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class SectionList extends StatefulWidget {
+class SectionListPage extends StatefulWidget {
   @override
-  State<SectionList> createState() => SectionListState();
+  State<SectionListPage> createState() => SectionListPageState();
 }
 
-class SectionListState extends State<SectionList> {
+class SectionListPageState extends State<SectionListPage> {
 
   @override
   Widget build(BuildContext context) {
