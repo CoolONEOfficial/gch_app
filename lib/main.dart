@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        fontFamily: 'Raleway'
+        fontFamily: 'BebasNeue'
       ),
       home: MyMapWidget()
       ///MyHomePage(title: 'Flutter Demo Home Page'),
