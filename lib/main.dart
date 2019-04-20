@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gch_cityservice/google_maps_page.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gch_cityservice/section_list.dart';
 
 void main() => runApp(MyApp());
@@ -15,7 +17,46 @@ final List<List<Widget>> screens = [
 ];
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  @override
+  StatelessElement createElement() {
+    databaseReference.child("tasks").onValue.listen((event) {
+      var tasks = event?.snapshot?.value;
+
+      Set<MyTask> set = Set<MyTask>();
+
+      final d  =tasks.map(
+            (val) {
+          return ;
+        },
+      );
+
+      for(int taskId = 0; taskId < tasks.length; taskId++) {
+        var task = tasks[taskId];
+
+        set.add(
+            MyTask.defaultClass(
+              taskId.toString(),
+              LatLng(
+                task["position"]["lat"],
+                task["position"]["lng"],
+              ),
+              task["name"],
+              task["name"],
+            )
+        );
+      }
+
+      debugPrint("d: " + d.toString());
+
+      taskBloc.add(
+        set
+      );
+
+//      taskBloc.add(set);
+    });
+    return super.createElement();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -30,6 +71,8 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+final databaseReference = FirebaseDatabase.instance.reference();
 
 
 
