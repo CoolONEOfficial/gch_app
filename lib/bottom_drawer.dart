@@ -27,7 +27,7 @@ class BottomDrawerCard extends StatelessWidget {
           topLeft: Radius.circular(18.0), topRight: Radius.circular(18.0)),
 //      onPanelSlide: (double pos) => setState((){
 //        _fabHeight = pos * (_panelHeightOpen - _panelHeightClosed) + _initFabHeight;
-//      }),
+//      }),wds
     );
   }
 

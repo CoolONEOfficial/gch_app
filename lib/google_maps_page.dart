@@ -57,14 +57,14 @@ class MyMapWidgetState extends State<MyMapWidget> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _onAddMarkerButtonPressed,
-        label: Text('Add marker!'),
-        icon: const Icon(
-          Icons.add_location,
-          size: 36.0,
-        ), //Icon(Icons.directions_boat),
-      ),
+//      floatingActionButton: FloatingActionButton.extended(
+//        onPressed: _onAddMarkerButtonPressed,
+//        label: Text('Add marker!'),
+//        icon: const Icon(
+//          Icons.add_location,
+//          size: 36.0,
+//        ), //Icon(Icons.directions_boat),
+//      ),
     );
   }
 
@@ -79,20 +79,20 @@ class MyMapWidgetState extends State<MyMapWidget> {
     controller.animateCamera(CameraUpdate.newCameraPosition(newPos));
   }
 
-  void _onAddMarkerButtonPressed() {
-    setState(() {
-      _markers.add(Marker(
-        // This marker id can be anything that uniquely identifies each marker.
-        markerId: MarkerId(_lastCameraPosition.target.toString()),
-        position: _lastCameraPosition.target,
-        infoWindow: InfoWindow(
-          title: 'One nore issue',
-          snippet: '3 people signed',
-        ),
-        icon: BitmapDescriptor.defaultMarker,
-      ));
-    });
-  }
+//  void _onAddMarkerButtonPressed() {
+//    setState(() {
+//      _markers.add(Marker(
+//        // This marker id can be anything that uniquely identifies each marker.
+//        markerId: MarkerId(_lastCameraPosition.target.toString()),
+//        position: _lastCameraPosition.target,
+//        infoWindow: InfoWindow(
+//          title: 'One nore issue',
+//          snippet: '3 people signed',
+//        ),
+//        icon: BitmapDescriptor.defaultMarker,
+//      ));
+//    });
+//  }
 
   _onMarkerTap(MyTask task) {
     taskBloc.add(task);
