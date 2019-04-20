@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "226785040824",
+    "firebase_url": "https://gch-dosday-ru.firebaseio.com",
+    "project_id": "gch-dosday-ru",
+    "storage_bucket": "gch-dosday-ru.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:226785040824:android:abe6f417b52ff610",
+        "android_client_info": {
+          "package_name": "ru.coolone.gch_cityservice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "226785040824-g7j4vpe3e0odo2mjool0kqvu9n9gk88a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrGL4RSXXtpTRZy1tPWKjePJoS7JwuCOE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "226785040824-g7j4vpe3e0odo2mjool0kqvu9n9gk88a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

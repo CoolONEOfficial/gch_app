@@ -29,6 +29,7 @@ dependencies:
   firebase_analytics: ^1.1.0
   firebase_database: ^1.0.5
   firebase_auth: ^0.8.0
+  intro_views_flutter: '^2.6.0'
 
 dev_dependencies:
   flutter_launcher_icons: "^0.7.0"
@@ -56,6 +57,7 @@ flutter:
     - assets/images/map-marker-green.png
     - assets/images/map-marker-grey.png
     - assets/images/map-marker-red.png
+    - assets/icons/icon.png
 
   uses-material-design: true
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gch_cityservice/screens/intro_screen.dart';
 import 'package:gch_cityservice/services/authentication.dart';
 
 class LoginSignUpScreen extends StatefulWidget {
@@ -48,19 +49,26 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
           userId = await widget.auth.signIn(_email, _password);
           print('Signed in: $userId');
         } else {
-          userId = await widget.auth.signUp(_email, _password);
-          widget.auth.sendEmailVerification();
-          _showVerifyEmailSentDialog();
-          print('Signed up user: $userId');
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (ctx) => IntroScreen(
+                        callback: () async {
+                          userId = await widget.auth.signUp(_email, _password);
+                          widget.auth.sendEmailVerification();
+                          _showVerifyEmailSentDialog();
+                          print('Signed up user: $userId');
+                        },
+                      )));
         }
         setState(() {
           _isLoading = false;
         });
-
-        if (userId.length > 0 && userId != null && _formMode == FormMode.LOGIN) {
+        if (userId.length > 0 &&
+            userId != null &&
+            _formMode == FormMode.LOGIN) {
           widget.onSignedIn();
         }
-
       } catch (e) {
         print('Error: $e');
         setState(() {
@@ -112,11 +120,14 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
         ));
   }
 
-  Widget _showCircularProgress(){
+  Widget _showCircularProgress() {
     if (_isLoading) {
       return Center(child: CircularProgressIndicator());
-    } return Container(height: 0.0, width: 0.0,);
-
+    }
+    return Container(
+      height: 0.0,
+      width: 0.0,
+    );
   }
 
   void _showVerifyEmailSentDialog() {
@@ -141,7 +152,7 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
     );
   }
 
-  Widget _showBody(){
+  Widget _showBody() {
     return Container(
         padding: EdgeInsets.all(16.0),
         child: Form(
@@ -185,7 +196,7 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
         child: CircleAvatar(
           backgroundColor: Colors.transparent,
           radius: 48.0,
-          child: Image.asset('assets/flutter-icon.png'),
+          child: Image.asset('assets/icons/icon.png'),
         ),
       ),
     );
@@ -235,8 +246,7 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
           ? Text('Create an account',
               style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300))
           : Text('Have an account? Sign in',
-              style:
-                  TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300)),
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300)),
       onPressed: _formMode == FormMode.LOGIN
           ? _changeFormToSignUp
           : _changeFormToLogin,
@@ -250,7 +260,8 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
           height: 40.0,
           child: RaisedButton(
             elevation: 5.0,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30.0)),
             color: Colors.blue,
             child: _formMode == FormMode.LOGIN
                 ? Text('Login',
