@@ -113,3 +113,10 @@ class BadTask extends MyTask {
 
 final bottomCardBloc = StreamController<MyTask>.broadcast();
 final taskBloc = StreamController<Set<MyTask>>.broadcast();
+
+
+AppBar myMapAppBar(){
+  return AppBar(
+    title: Text("MyMap"),
+  );
+}
