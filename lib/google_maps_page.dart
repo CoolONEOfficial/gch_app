@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gch_cityservice/bottom_drawer.dart';
+import 'package:gch_cityservice/main.dart';
+import 'package:gch_cityservice/pages/home_page.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MyMapWidget extends StatefulWidget {
@@ -66,38 +68,7 @@ class MyMapWidgetState extends State<MyMapWidget> {
   }
 }
 
-class MyTask {
-  MyTask();
-
-  MyTask.defaultClass(this.id, this.position, this.title, this.snippet);
-
-  String title = 'default title';
-  String snippet = 'default snippet';
-  String id = '1234567890';
-
-  LatLng position = LatLng(56.327752241668215, 44.00208346545696);
-
-  Marker toMarker() {
-    var myDescriptor =
-        BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow);
-
-    if (this is GoodTask) {
-      myDescriptor =
-          BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
-    } else if (this is BadTask) {
-      myDescriptor = BitmapDescriptor.defaultMarker;
-    }
-
-    return Marker(
-      markerId: MarkerId(this.id),
-      position: this.position,
-      onTap: () => _onMarkerTap(this),
-      icon: myDescriptor,
-    );
-  }
-}
-
-_onMarkerTap(MyTask task) {
+onMarkerTap(MyTask task) {
   bottomCardBloc.add(task);
 }
 
@@ -112,8 +83,6 @@ class BadTask extends MyTask {
 }
 
 final bottomCardBloc = StreamController<MyTask>.broadcast();
-final taskBloc = StreamController<Set<MyTask>>.broadcast();
-
 
 AppBar myMapAppBar(){
   return AppBar(

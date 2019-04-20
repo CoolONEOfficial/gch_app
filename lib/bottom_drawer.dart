@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gch_cityservice/google_maps_page.dart';
+import 'package:gch_cityservice/pages/home_page.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class BottomDrawerCard extends StatelessWidget {

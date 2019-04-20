@@ -1,59 +1,92 @@
-import 'package:flutter/material.dart';
-import 'package:gch_cityservice/services/authentication.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:gch_cityservice/models/todo.dart';
 import 'dart:async';
 
-class HomePage extends StatefulWidget {
-  HomePage({Key key, this.auth, this.userId, this.onSignedOut})
-      : super(key: key);
+import 'package:flutter/material.dart';
+import 'package:gch_cityservice/google_maps_page.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:gch_cityservice/pages/root_page.dart';
+import 'package:gch_cityservice/services/authentication.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:gch_cityservice/section_list.dart';
 
+int activeScreen = 0;
+
+enum sections { MyMap, MyList }
+enum neededWidget { Section, AppBar }
+
+final List<List<Widget>> screens = [
+  [MyMapWidget(), myMapAppBar()],
+  [SectionList(), myListAppBar()],
+];
+
+class HomePage extends StatefulWidget {
+  HomePage({
+    Key key,
+    this.auth,
+    this.userId,
+    this.onSignedOut,
+  }) : super(key: key);
   final BaseAuth auth;
   final VoidCallback onSignedOut;
   final String userId;
 
   @override
-  State<StatefulWidget> createState() => new _HomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Todo> _todoList;
-
-  final FirebaseDatabase _database = FirebaseDatabase.instance;
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-  final _textEditingController = TextEditingController();
-  StreamSubscription<Event> _onTodoAddedSubscription;
-  StreamSubscription<Event> _onTodoChangedSubscription;
-
-  Query _todoQuery;
-
   bool _isEmailVerified = false;
 
   @override
   void initState() {
+    _checkEmailVerification().then((result) {
+      databaseReference.child("tasks").onValue.listen(
+            (event) {
+          var tasks = event?.snapshot?.value;
+
+          Set<MyTask> set = Set<MyTask>();
+
+          for (int taskId = 0; taskId < tasks.length; taskId++) {
+            var task = tasks[taskId];
+
+            set.add(
+              MyTask.defaultClass(
+                taskId.toString(),
+                LatLng(
+                  task["position"]["lat"],
+                  task["position"]["lng"],
+                ),
+                task["name"],
+                task["name"],
+              ),
+            );
+          }
+
+          taskBloc.add(set);
+        },
+      );
+    });
+
     super.initState();
-
-    _checkEmailVerification();
-
-    _todoList = new List();
-    _todoQuery = _database
-        .reference()
-        .child("todo")
-        .orderByChild("userId")
-        .equalTo(widget.userId);
-    _onTodoAddedSubscription = _todoQuery.onChildAdded.listen(_onEntryAdded);
-    _onTodoChangedSubscription = _todoQuery.onChildChanged.listen(_onEntryChanged);
   }
 
-  void _checkEmailVerification() async {
+  Future<bool> _checkEmailVerification() async {
     _isEmailVerified = await widget.auth.isEmailVerified();
     if (!_isEmailVerified) {
       _showVerifyEmailDialog();
     }
+    return _isEmailVerified;
   }
 
-  void _resentVerifyEmail(){
+  _signOut() async {
+    try {
+      await widget.auth.signOut();
+      widget.onSignedOut();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void _resentVerifyEmail() {
     widget.auth.sendEmailVerification();
     _showVerifyEmailSentDialog();
   }
@@ -64,18 +97,18 @@ class _HomePageState extends State<HomePage> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Verify your account"),
-          content: new Text("Please verify account in the link sent to email"),
+          title: Text("Verify your account"),
+          content: Text("Please verify account in the link sent to email"),
           actions: <Widget>[
-            new FlatButton(
-              child: new Text("Resent link"),
+            FlatButton(
+              child: Text("Resent link"),
               onPressed: () {
                 Navigator.of(context).pop();
                 _resentVerifyEmail();
               },
             ),
-            new FlatButton(
-              child: new Text("Dismiss"),
+            FlatButton(
+              child: Text("Dismiss"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -92,11 +125,11 @@ class _HomePageState extends State<HomePage> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Verify your account"),
-          content: new Text("Link to verify account has been sent to your email"),
+          title: Text("Verify your account"),
+          content: Text("Link to verify account has been sent to your email"),
           actions: <Widget>[
-            new FlatButton(
-              child: new Text("Dismiss"),
+            FlatButton(
+              child: Text("Dismiss"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -108,159 +141,105 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void dispose() {
-    _onTodoAddedSubscription.cancel();
-    _onTodoChangedSubscription.cancel();
-    super.dispose();
-  }
+  Widget build(BuildContext context) => MySection();
+}
 
-  _onEntryChanged(Event event) {
-    var oldEntry = _todoList.singleWhere((entry) {
-      return entry.key == event.snapshot.key;
-    });
+final databaseReference = FirebaseDatabase.instance.reference();
 
-    setState(() {
-      _todoList[_todoList.indexOf(oldEntry)] = Todo.fromSnapshot(event.snapshot);
-    });
-  }
+class MySection extends StatefulWidget {
+  @override
+  State<MySection> createState() => MySectionState();
+}
 
-  _onEntryAdded(Event event) {
-    setState(() {
-      _todoList.add(Todo.fromSnapshot(event.snapshot));
-    });
-  }
-
-  _signOut() async {
-    try {
-      await widget.auth.signOut();
-      widget.onSignedOut();
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  _addNewTodo(String todoItem) {
-    if (todoItem.length > 0) {
-
-      Todo todo = new Todo(todoItem.toString(), widget.userId, false);
-      _database.reference().child("todo").push().set(todo.toJson());
-    }
-  }
-
-  _updateTodo(Todo todo){
-    //Toggle completed
-    todo.completed = !todo.completed;
-    if (todo != null) {
-      _database.reference().child("todo").child(todo.key).set(todo.toJson());
-    }
-  }
-
-  _deleteTodo(String todoId, int index) {
-    _database.reference().child("todo").child(todoId).remove().then((_) {
-      print("Delete $todoId successful");
-      setState(() {
-        _todoList.removeAt(index);
-      });
-    });
-  }
-
-  _showDialog(BuildContext context) async {
-    _textEditingController.clear();
-    await showDialog<String>(
-        context: context,
-      builder: (BuildContext context) {
-          return AlertDialog(
-            content: new Row(
-              children: <Widget>[
-                new Expanded(child: new TextField(
-                  controller: _textEditingController,
-                  autofocus: true,
-                  decoration: new InputDecoration(
-                    labelText: 'Add new todo',
-                  ),
-                ))
-              ],
-            ),
-            actions: <Widget>[
-              new FlatButton(
-                  child: const Text('Cancel'),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  }),
-              new FlatButton(
-                  child: const Text('Save'),
-                  onPressed: () {
-                    _addNewTodo(_textEditingController.text.toString());
-                    Navigator.pop(context);
-                  })
-            ],
-          );
-      }
-    );
-  }
-
-  Widget _showTodoList() {
-    if (_todoList.length > 0) {
-      return ListView.builder(
-          shrinkWrap: true,
-          itemCount: _todoList.length,
-          itemBuilder: (BuildContext context, int index) {
-            String todoId = _todoList[index].key;
-            String subject = _todoList[index].subject;
-            bool completed = _todoList[index].completed;
-            String userId = _todoList[index].userId;
-            return Dismissible(
-              key: Key(todoId),
-              background: Container(color: Colors.red),
-              onDismissed: (direction) async {
-                _deleteTodo(todoId, index);
-              },
-              child: ListTile(
-                title: Text(
-                  subject,
-                  style: TextStyle(fontSize: 20.0),
-                ),
-                trailing: IconButton(
-                    icon: (completed)
-                        ? Icon(
-                      Icons.done_outline,
-                      color: Colors.green,
-                      size: 20.0,
-                    )
-                        : Icon(Icons.done, color: Colors.grey, size: 20.0),
-                    onPressed: () {
-                      _updateTodo(_todoList[index]);
-                    }),
-              ),
-            );
-          });
-    } else {
-      return Center(child: Text("Welcome. Your list is empty",
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 30.0),));
-    }
-  }
+class MySectionState extends State<MySection> {
+  int currentSectionID = sections.MyMap.index;
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-        appBar: new AppBar(
-          title: new Text('Flutter login demo'),
-          actions: <Widget>[
-            new FlatButton(
-                child: new Text('Logout',
-                    style: new TextStyle(fontSize: 17.0, color: Colors.white)),
-                onPressed: _signOut)
-          ],
-        ),
-        body: _showTodoList(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            _showDialog(context);
-          },
-          tooltip: 'Increment',
-          child: Icon(Icons.add),
-        )
+    return Scaffold(
+      body: screens[currentSectionID][neededWidget.Section.index],
+      appBar: screens[currentSectionID][neededWidget.AppBar.index],
+      drawer: drawer(context, activeScreen),
+    );
+  }
+
+  Drawer drawer(BuildContext context, int id) {
+    return Drawer(
+      child: Column(
+        children: <Widget>[
+          UserAccountsDrawerHeader(
+            accountName: Text("Ashish Rawat"),
+            accountEmail: Text("ashishrawat2911@gmail.com"),
+            currentAccountPicture: CircleAvatar(
+              backgroundColor: Theme.of(context).platform == TargetPlatform.iOS
+                  ? Colors.blue
+                  : Colors.white,
+              child: Text(
+                "A",
+                style: TextStyle(fontSize: 40.0),
+              ),
+            ),
+          ),
+          ListTile(
+            title: Text("Карта"),
+            trailing: Icon(Icons.map),
+            onTap: () {
+              setState(() {
+                Navigator.of(context).pop();
+                currentSectionID = sections.MyMap.index;
+              });
+            },
+          ),
+          ListTile(
+            title: Text("Список"),
+            trailing: Icon(Icons.list),
+            onTap: () {
+              setState(() {
+                Navigator.of(context).pop();
+                currentSectionID = sections.MyList.index;
+              });
+            },
+          ),
+          ListTile(
+            title: Text("Обращение"),
+            trailing: Icon(Icons.add_circle),
+            onTap: () {},
+          ),
+        ],
+      ),
     );
   }
 }
+
+class MyTask {
+  MyTask();
+
+  MyTask.defaultClass(this.id, this.position, this.title, this.snippet);
+
+  String title = 'default title';
+  String snippet = 'default snippet';
+  String id = '1234567890';
+
+  LatLng position = LatLng(56.327752241668215, 44.00208346545696);
+
+  Marker toMarker() {
+    var myDescriptor =
+    BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow);
+
+    if (this is GoodTask) {
+      myDescriptor =
+          BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen);
+    } else if (this is BadTask) {
+      myDescriptor = BitmapDescriptor.defaultMarker;
+    }
+
+    return Marker(
+      markerId: MarkerId(this.id),
+      position: this.position,
+      onTap: () => onMarkerTap(this),
+      icon: myDescriptor,
+    );
+  }
+}
+
+final taskBloc = StreamController<Set<MyTask>>.broadcast();
