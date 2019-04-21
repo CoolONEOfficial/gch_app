@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gch_cityservice/main.dart';
+import 'package:gch_cityservice/screens/home_screen.dart';
 import 'package:gch_cityservice/screens/intro_screen.dart';
+import 'package:gch_cityservice/screens/siggnin_details_screen.dart';
 import 'package:gch_cityservice/services/authentication.dart';
 
 class LoginSignUpScreen extends StatefulWidget {
@@ -49,17 +52,39 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
           userId = await widget.auth.signIn(_email, _password);
           print('Signed in: $userId');
         } else {
+          var _address, _number;
+
           Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (ctx) => SigninDetailsScreen(
+                        callback: (address, phoneNumber) {
+                          _address = address;
+                          _number = phoneNumber;
+
+                          Navigator.pop(context);
+                        },
+                      ))).then((_) => Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (ctx) => IntroScreen(
                         callback: () async {
                           userId = await widget.auth.signUp(_email, _password);
                           widget.auth.sendEmailVerification();
-                          _showVerifyEmailSentDialog();
+                          databaseReference
+                              .child("users")
+                              .child((await widget.auth.getCurrentUser()).uid)
+                              .set({
+                            "address": _address,
+                            "phoneNumber": _number,
+                          });
+                          await _showVerifyEmailSentDialog();
+
+                          Navigator.pop(context);
                           print('Signed up user: $userId');
                         },
-                      )));
+                      ))));
+
         }
         setState(() {
           _isLoading = false;
@@ -110,7 +135,7 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
     _isIos = Theme.of(context).platform == TargetPlatform.iOS;
     return Scaffold(
         appBar: AppBar(
-          title: Text('Flutter login demo'),
+          title: Text('Авторизация'),
         ),
         body: Stack(
           children: <Widget>[
@@ -130,17 +155,17 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
     );
   }
 
-  void _showVerifyEmailSentDialog() {
-    showDialog(
+  Future _showVerifyEmailSentDialog() {
+    return showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: Text("Verify your account"),
-          content: Text("Link to verify account has been sent to your email"),
+          title: Text("Подтвердите аккаунт"),
+          content: Text("Перейдите по ссылке в письме отправленном на вашу электронную почту"),
           actions: <Widget>[
             FlatButton(
-              child: Text("Dismiss"),
+              child: Text("Ок"),
               onPressed: () {
                 _changeFormToLogin();
                 Navigator.of(context).pop();
@@ -189,22 +214,24 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
   }
 
   Widget _showLogo() {
-    return Hero(
-      tag: 'hero',
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(0.0, 70.0, 0.0, 0.0),
-        child: CircleAvatar(
-          backgroundColor: Colors.transparent,
-          radius: 48.0,
-          child: Image.asset('assets/icons/icon.png'),
-        ),
+    return Container(
+      padding: const EdgeInsets.all(20.0),
+      //I used some padding without fixed width and height
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        // You can use like this way or like the below line
+        //borderRadius: new BorderRadius.circular(30.0),
+        color: Colors.blue,
       ),
+      child: Image.asset(
+          'assets/icons/icon.png'), // You can add a Icon instead of text also, like below.
+      //child: new Icon(Icons.arrow_forward, size: 50.0, color: Colors.black38)),
     );
   }
 
   Widget _showEmailInput() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
       child: TextFormField(
         maxLines: 1,
         keyboardType: TextInputType.emailAddress,
@@ -215,7 +242,7 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
               Icons.mail,
               color: Colors.grey,
             )),
-        validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
+        validator: (value) => value.isEmpty ? 'Необходимо ввести почту' : null,
         onSaved: (value) => _email = value,
       ),
     );
@@ -229,12 +256,12 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
         obscureText: true,
         autofocus: false,
         decoration: InputDecoration(
-            hintText: 'Password',
+            hintText: 'Пароль',
             icon: Icon(
               Icons.lock,
               color: Colors.grey,
             )),
-        validator: (value) => value.isEmpty ? 'Password can\'t be empty' : null,
+        validator: (value) => value.isEmpty ? 'Необходимо заполнить пароль' : null,
         onSaved: (value) => _password = value,
       ),
     );
@@ -243,9 +270,9 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
   Widget _showSecondaryButton() {
     return FlatButton(
       child: _formMode == FormMode.LOGIN
-          ? Text('Create an account',
+          ? Text('Создать аккаунт',
               style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300))
-          : Text('Have an account? Sign in',
+          : Text('Уже есть аккаунт? Войдите',
               style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300)),
       onPressed: _formMode == FormMode.LOGIN
           ? _changeFormToSignUp
@@ -264,9 +291,9 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
                 borderRadius: BorderRadius.circular(30.0)),
             color: Colors.blue,
             child: _formMode == FormMode.LOGIN
-                ? Text('Login',
+                ? Text('Войти',
                     style: TextStyle(fontSize: 20.0, color: Colors.white))
-                : Text('Create account',
+                : Text('Зарегистрироваться',
                     style: TextStyle(fontSize: 20.0, color: Colors.white)),
             onPressed: _validateAndSubmit,
           ),

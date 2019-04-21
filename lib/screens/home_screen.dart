@@ -96,24 +96,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _showVerifyEmailDialog() {
     showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: Text("Verify your account"),
-          content: Text("Please verify account in the link sent to email"),
+          title: Text("Плдтверждение аккаунта"),
+          content: Text("Перейдите по ссылке в письме отправленном на вашу электронную почту"),
           actions: <Widget>[
             FlatButton(
-              child: Text("Resent link"),
+              child: Text("Отправить письмо еще раз"),
               onPressed: () {
                 Navigator.of(context).pop();
                 _resentVerifyEmail();
-              },
-            ),
-            FlatButton(
-              child: Text("Dismiss"),
-              onPressed: () {
-                Navigator.of(context).pop();
               },
             ),
           ],
@@ -128,11 +123,11 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: Text("Verify your account"),
-          content: Text("Link to verify account has been sent to your email"),
+          title: Text("Подтверждение аккаунта"),
+          content: Text("Перейдите по ссылке в письме отправленном на вашу электронную почту"),
           actions: <Widget>[
             FlatButton(
-              child: Text("Dismiss"),
+              child: Text("Ок"),
               onPressed: () {
                 Navigator.of(context).pop();
               },

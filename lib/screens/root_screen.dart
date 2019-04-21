@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gch_cityservice/main.dart';
 import 'package:gch_cityservice/screens/home_screen.dart';
 import 'package:gch_cityservice/screens/login_signup_screen.dart';
 import 'package:gch_cityservice/services/authentication.dart';
+import 'package:google_places_picker/google_places_picker.dart';
 
 class RootScreen extends StatefulWidget {
   RootScreen({this.auth});
@@ -26,6 +28,12 @@ class _RootScreenState extends State<RootScreen> {
   @override
   void initState() {
     super.initState();
+
+    PluginGooglePlacePicker.initialize(
+      androidApiKey: "AIzaSyCfJL6I2U6R9vm26LKG4b8GXRzCMB-L8CY",
+      iosApiKey: "TODO_KEY",
+    );
+
     widget.auth.getCurrentUser().then((user) {
       setState(() {
         if (user != null) {
@@ -66,6 +74,13 @@ class _RootScreenState extends State<RootScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.instance = ScreenUtil(
+      width: 1080,
+      height: 1920,
+      allowFontScaling: true,
+    )..init(context);
+    su = ScreenUtil.getInstance();
+
     switch (authStatus) {
       case AuthStatus.NOT_DETERMINED:
         return _buildWaitingScreen();
