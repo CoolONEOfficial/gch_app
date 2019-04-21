@@ -15,6 +15,10 @@ class SectionListPageState extends State<SectionListPage> {
       builder: (ctx, snapshot) {
         var list = tasksSet.toList();
         return ListView.builder(
+//          calcDistance(
+//              LatLng(task["position"]["lat"], task["position"]["lng"]),
+//              lastPosition
+//          ),
           itemBuilder: (ctx, index) => myListTile(ctx, index),
           itemCount: list.length,
         );
@@ -138,6 +142,3 @@ AppBar myListAppBar() {
     title: Text("MyList"),
   );
 }
-
-
-///http://sim-kr.ru/UserImages/37cd40ac.jpg

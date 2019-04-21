@@ -18,7 +18,7 @@ class BottomDrawerCard extends StatelessWidget {
       minHeight: _panelHeightClosed,
       parallaxEnabled: true,
       parallaxOffset: .5,
-      panel: _panel(),
+      panel: _panel(context),
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(18.0),
         topRight: Radius.circular(18.0),
@@ -26,7 +26,7 @@ class BottomDrawerCard extends StatelessWidget {
     );
   }
 
-  Widget _widgetName() {
+  Widget _widgetName(context) {
     return Container(
         height: _panelHeightClosed,
         child: Row(
@@ -34,7 +34,18 @@ class BottomDrawerCard extends StatelessWidget {
             Column(
               children: <Widget>[
                 Text(task.title??"Неизвестно", style: TextStyle(fontSize: 20),),
-                Text(intToCategory(task.cathegory?.index)??"Нет", style: TextStyle(fontSize: 10),)
+                Text(intToCategory(task.cathegory?.index)??"Нет", style: TextStyle(fontSize: 10),),
+                Container(
+                    height: 40,
+                    width: 150,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).accentColor,//const Color.fromRGBO(0x7e, 0x00, 0xff, 1),//0x7e00ff),
+                        borderRadius: BorderRadius.only(topRight: Radius.circular(8.0), bottomRight: Radius.circular(8.0))
+                    ),
+                    child: Center(
+                      child: Text(task.title, style: TextStyle(color: Colors.white, fontSize: 20),),
+                    )
+                ),
               ],
             ),
             Expanded(
@@ -115,9 +126,9 @@ class BottomDrawerCard extends StatelessWidget {
     ));
   }
 
-  Widget _panel() => Column(
+  Widget _panel(context) => Column(
         children: <Widget>[
-          _widgetName(),
+          _widgetName(context),
           _widgetGallery(),
           _widgetComments(),
         ],
