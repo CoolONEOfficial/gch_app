@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gch_cityservice/pages/google_maps_page.dart';
 import 'package:gch_cityservice/pages/section_list_page.dart';
 import 'package:gch_cityservice/screens/home_screen.dart';
+import 'package:gch_cityservice/services/authentication.dart';
 import 'package:http/http.dart' as http;
 
 class TaskDetails extends StatefulWidget {
@@ -84,13 +85,19 @@ class _TaskDetailsState extends State<TaskDetails> {
   }
 
   onButtonSignPress() async {
-      var url = "http://192.168.43.211:8080/gch_server_war_exploded/test";
-      var client = http.Client();
-      var request = http.Request('POST', Uri.parse(url))
-        ..bodyFields = {
-          'uuid': 'sdfsd',
-          'taskid': widget.task.id,
-        };
+    var url = "http://192.168.43.211:8080/gch_server_war_exploded/test";
+    var client = http.Client();
+    var request = http.Request('POST', Uri.parse(url))
+      ..bodyFields = {
+        'uuid': (await firebaseAuth.currentUser()).uid,
+        'taskid': widget.task.id,
+      };
+    client
+        .send(request)
+        .then((response) => response.stream
+        .bytesToString()
+        .then((value) => print(value.toString())))
+        .catchError((error) => print(error.toString()));
   }
 
   Widget _widgetGallery() {

@@ -55,7 +55,7 @@ class MyMapWidgetState extends State<MyMapWidget> {
           stream: bottomCardBloc.stream,
           builder: (context, snapshot) => snapshot.data != null
               ? SlidingUpPanel(
-                  maxHeight: ScreenUtil.getInstance().setHeight(1800),
+                  maxHeight: ScreenUtil.getInstance().setHeight(1750),
                   minHeight: panelHeightClosed,
                   parallaxEnabled: true,
                   backdropEnabled: true,

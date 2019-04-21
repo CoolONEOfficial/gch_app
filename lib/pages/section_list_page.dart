@@ -1,6 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:gch_cityservice/screens/home_screen.dart';
+import 'package:gch_cityservice/screens/task_details_screen.dart';
+import 'package:gch_cityservice/services/authentication.dart';
 import 'package:http/http.dart' as http;
 
 class SectionListPage extends StatefulWidget {
@@ -28,19 +29,12 @@ class SectionListPageState extends State<SectionListPage> {
     MyTask tsk = tasksSet.toList().elementAt(index);
     return GestureDetector(
       onTap: () async {
-        var url = "http://192.168.43.211:8080/gch_server_war_exploded/test";
-        var client = http.Client();
-        var request = http.Request('POST', Uri.parse(url))
-          ..bodyFields = {
-            'uuid': 'sdfsd',
-            'taskid': tsk.id,
-          };
-        client
-            .send(request)
-            .then((response) => response.stream
-                .bytesToString()
-                .then((value) => print(value.toString())))
-            .catchError((error) => print(error.toString()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (ctx) => TaskDetailsScreen(task: tsk),
+          ),
+        );
       },
       child: Card(
           elevation: 10,
@@ -127,8 +121,9 @@ class SectionListPageState extends State<SectionListPage> {
                           child: Container(
                         width: 100,
                         height: 100,
-                        child: Image.network(tsk.picUrls.isNotEmpty ? tsk.picUrls[0] : "" ),
-                           // "http://sim-kr.ru/UserImages/37cd40ac.jpg"),
+                        child: Image.network(
+                            tsk.picUrls.isNotEmpty ? tsk.picUrls[0] : ""),
+                        // "http://sim-kr.ru/UserImages/37cd40ac.jpg"),
                       ))
                     ],
                   ),
@@ -165,7 +160,8 @@ final categoryNames = [
   "Освещение",
 ];
 
-String intToCategory(int index) => categoryNames[index ?? 0] ?? categoryNames[0];
+String intToCategory(int index) =>
+    categoryNames[index ?? 0] ?? categoryNames[0];
 
 AppBar myListAppBar() {
   return AppBar(
