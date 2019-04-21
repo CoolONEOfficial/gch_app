@@ -47,15 +47,18 @@ class _HomeScreenState extends State<HomeScreen> {
           for (int taskId = 0; taskId < _tasks.length; taskId++) {
             var task = _tasks[taskId];
 
+
             set.add(
-              MyTask.defaultClass(
+              MyTask.pro(
                 taskId.toString(),
-                LatLng(
-                  task["position"]["lat"],
-                  task["position"]["lng"],
+                calcDistance(
+                    LatLng(task["position"]["lat"], task["position"]["lng"]),
+                    lastPosition
                 ),
                 task["name"],
-                task["name"],
+                task["snippet"],
+                task["category"],
+                task["time"]
               ),
             );
           }
@@ -218,9 +221,13 @@ class MyTask {
 
   MyTask.defaultClass(this.id, this.position, this.title, this.snippet);
 
+  MyTask.pro(this.id, this.distanceToUser, this.title, this.snippet, this.cathegory, this.sendTime);
+
   String title = 'default title';
   String id = '1234567890';
   LatLng position = LatLng(56.327752241668215, 44.00208346545696);
+
+  int distanceToUser = -1;
 
   //TODO: add more fields to database
   String snippet = 'default snippet';

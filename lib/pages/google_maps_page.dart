@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gch_cityservice/bottom_drawer.dart';
 import 'package:gch_cityservice/screens/home_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'dart:math';
 
 class MyMapWidget extends StatefulWidget {
   @override
@@ -77,4 +78,17 @@ AppBar myMapAppBar(){
   return AppBar(
     title: Text("MyMap"),
   );
+}
+
+LatLng lastPosition;
+
+///in meters
+int calcDistance(LatLng from, LatLng to){
+  final double EARTH_RADIUS = 6371009;
+  double res = acos(sin(toRadians(from.latitude) * sin(toRadians(to.latitude))) + cos(toRadians(from.latitude))*cos(toRadians(to.latitude))*cos(toRadians(from.longitude-to.longitude))) * EARTH_RADIUS;
+  return res.round();
+}
+
+double toRadians(double z){
+  return z*pi/180;
 }
