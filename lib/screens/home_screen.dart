@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   task["position"]["lat"],
                   task["position"]["lng"],
                 ),
-                task["photoUrls"],
+                task["photoUrls"] ?? List(),
                 task["address"],
               ),
 
@@ -246,7 +246,7 @@ class MyTask {
   Category  category = Category.None;
   int       sendTime = DateTime.utc(2019).millisecondsSinceEpoch;
   //bool      checkedByUser = false;
-  List<String>  picUrls = [];
+  List<dynamic>  picUrls = [];
 
   Future toDatabase(DatabaseReference ref) async {
     return ref.set({

@@ -127,7 +127,7 @@ class SectionListPageState extends State<SectionListPage> {
                           child: Container(
                         width: 100,
                         height: 100,
-                        child: Image.network(tsk.picUrls[0] ),
+                        child: Image.network(tsk.picUrls.isNotEmpty ? tsk.picUrls[0] : "" ),
                            // "http://sim-kr.ru/UserImages/37cd40ac.jpg"),
                       ))
                     ],
