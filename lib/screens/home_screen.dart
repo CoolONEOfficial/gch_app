@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 -1,
                 task["title"],
                 task["snippet"],
-                Category.values[task["category"]],
+                Category.values[ task["category"]  ],
                 task["time"],
                 LatLng(
                   task["position"]["lat"],
