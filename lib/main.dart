@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gch_cityservice/pages/google_maps_page.dart';
-import 'package:gch_cityservice/screens/home_screen.dart';
 import 'package:gch_cityservice/screens/root_screen.dart';
 import 'package:gch_cityservice/services/authentication.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,7 +8,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_places_picker/google_places_picker.dart';
 
 void main() {
-
   var location = Location();
   location.onLocationChanged().listen((LocationData currentLocation) {
     lastPosition = LatLng(currentLocation.latitude, currentLocation.longitude);
@@ -20,7 +18,6 @@ void main() {
     //print(currentLocation.latitude);
     //print(currentLocation.longitude);
   });
-  ///Not safe code
 
   runApp(MyApp());
 }
