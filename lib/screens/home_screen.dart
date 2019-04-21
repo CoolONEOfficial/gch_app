@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
               MyTask.pro(
                 taskId.toString(),
                 -1,
-                task["name"],
+                task["title"],
                 task["snippet"],
                 Category.values[task["category"]],
                 task["time"],
@@ -60,7 +60,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   task["position"]["lat"],
                   task["position"]["lng"],
                 ),
+                task["photoUrls"]
               ),
+
+              //todo get urls
             );
           }
 
@@ -228,16 +231,18 @@ class MyTask {
   MyTask.defaultClass(this.id, this.position, this.title, this.snippet);
 
   MyTask.pro(this.id, this.distanceToUser, this.title, this.snippet,
-      this.category, this.sendTime, this.position);
+      this.category, this.sendTime, this.position, this.picUrls);
 
-  String title = 'default title';
-  String id = '1234567890';
-  LatLng position = LatLng(56.327752241668215, 44.00208346545696);
-  String address = "Unknown address";
-  int distanceToUser = -1;
-  String snippet = 'default snippet';
-  Category category = Category.None;
-  int sendTime = DateTime.utc(2019).millisecondsSinceEpoch;
+  String    title = 'default title';
+  String    id = '1234567890';
+  LatLng    position = LatLng(56.327752241668215, 44.00208346545696);
+  String    address = "Unknown address";
+  int       distanceToUser = -1;
+  String    snippet = 'default snippet';
+  Category  category = Category.None;
+  int       sendTime = DateTime.utc(2019).millisecondsSinceEpoch;
+  //bool      checkedByUser = false;
+  List<String>  picUrls = [];
 
   Future toDatabase(DatabaseReference ref) async {
     return ref.set({

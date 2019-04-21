@@ -15,6 +15,8 @@ class SectionListPageState extends State<SectionListPage> {
         initialData: Set(),
         builder: (ctx, snapshot) {
           var list = tasksSet.toList();
+          print(snapshot.toString());
+          print(list.length);
           return ListView.builder(
             itemBuilder: (ctx, index) => myListTile(ctx, index),
             itemCount: list.length,
@@ -57,7 +59,7 @@ class SectionListPageState extends State<SectionListPage> {
                               bottomRight: Radius.circular(8.0))),
                       child: Center(
                         child: Text(
-                          tsk.title,
+                          tsk.title ?? "",
                           style: TextStyle(color: Colors.white),
                         ),
                       )),
@@ -125,8 +127,8 @@ class SectionListPageState extends State<SectionListPage> {
                           child: Container(
                         width: 100,
                         height: 100,
-                        child: Image.network(
-                            "http://sim-kr.ru/UserImages/37cd40ac.jpg"),
+                        child: Image.network(tsk.picUrls[0] ),
+                           // "http://sim-kr.ru/UserImages/37cd40ac.jpg"),
                       ))
                     ],
                   ),

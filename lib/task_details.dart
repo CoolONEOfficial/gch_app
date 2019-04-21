@@ -68,68 +68,35 @@ class _TaskDetailsState extends State<TaskDetails> {
   Widget _widgetGallery() {
     return Container(
       height: 100,
-      child: ListView(
+      child: ListView.builder(
         // This next line does the trick.
         scrollDirection: Axis.horizontal,
-        children: <Widget>[
-          Container(
-            width: 100.0,
-            child: Image.network("http://sim-kr.ru/UserImages/37cd40ac.jpg"),
-          ),
-          Container(
-            width: 100.0,
-            child: Image.network("http://sim-kr.ru/UserImages/37cd40ac.jpg"),
-          ),
-          Container(
-            width: 100.0,
-            child: Image.network("http://sim-kr.ru/UserImages/37cd40ac.jpg"),
-          ),
-          Container(
-            width: 100.0,
-            child: Image.network("http://sim-kr.ru/UserImages/37cd40ac.jpg"),
-          ),
-          Container(
-            width: 100.0,
-            child: Image.network("http://sim-kr.ru/UserImages/37cd40ac.jpg"),
-          ),
-        ],
+        itemBuilder: (ctx, index) => myPhoto(ctx, index),
+        itemCount: widget.task.picUrls.length,
       ),
     );
   }
 
+  Widget myPhoto(ctx, index){
+    return Image.network(widget.task.picUrls[index]);
+  }
+
+
   Widget _widgetComments() {
     return Flexible(
-        child: ListView(
-      children: <Widget>[
-        ListTile(
-          leading: const Icon(Icons.comment),
-          title: const Text('Комментарий 1'),
+        child: ListView.builder(
+          // This next line does the trick.
+          scrollDirection: Axis.vertical,
+          itemBuilder: (ctx, index) => ListTile(
+            leading: const Icon(Icons.comment),
+            title: Text('Комментарий '+(index+1).toString()),
+          ),
+          itemCount: widget.task.picUrls.length,
         ),
-        ListTile(
-          leading: const Icon(Icons.comment),
-          title: const Text('Комментарий 2'),
-        ),
-        ListTile(
-          leading: const Icon(Icons.comment),
-          title: const Text('Комментарий 3'),
-        ),
-        ListTile(
-          leading: const Icon(Icons.comment),
-          title: const Text('Комментарий 4'),
-        ),
-        ListTile(
-          leading: const Icon(Icons.comment),
-          title: const Text('Комментарий 5'),
-        ),
-        ListTile(
-          leading: const Icon(Icons.comment),
-          title: const Text('Комментарий 6'),
-        ),
-        ListTile(
-          leading: const Icon(Icons.comment),
-          title: const Text('Комментарий 7'),
-        ),
-      ],
-    ));
+//        ListTile(
+//          leading: const Icon(Icons.comment),
+//          title: const Text('Комментарий 7'),
+//        ),
+    );
   }
 }
