@@ -8,16 +8,17 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:latlong/latlong.dart' as LutLonh;
 
-void main() {
-  LutLonh.Distance dis = LutLonh.Distance();
+var location = Location();
 
-  var location = Location();
+
+void main() {
+
+  LutLonh.Distance dis = LutLonh.Distance();
   location.onLocationChanged().listen((LocationData currentLocation) {
     lastPosition = LatLng(currentLocation.latitude, currentLocation.longitude);
-    for (var x in tasksSet) {
-      x.distanceToUser = dis(
-          LutLonh.LatLng(x.position.latitude, x.position.longitude),
-          LutLonh.LatLng(lastPosition.latitude, lastPosition.longitude));
+    for(var x in tasksSet){
+      x.distanceToUser = dis(LutLonh.LatLng(x.position.latitude, x.position.longitude),
+          LutLonh.LatLng(lastPosition.latitude, lastPosition.longitude)).round();//calcDistance(x.position, lastPosition);
     }
     taskBloc.add(null);
   });

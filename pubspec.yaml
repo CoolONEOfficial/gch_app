@@ -62,6 +62,10 @@ flutter:
     - assets/images/map-marker-grey.png
     - assets/images/map-marker-red.png
     - assets/icons/icon.png
+    - assets/images/intro/back.png
+    - assets/images/intro/intro_1.png
+    - assets/images/intro/intro_2.png
+    - assets/images/intro/intro_3.png
 
   uses-material-design: true
 
