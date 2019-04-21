@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:gch_cityservice/pages/google_maps_page.dart';
+import 'package:gch_cityservice/screens/home_screen.dart';
 import 'package:gch_cityservice/screens/root_screen.dart';
 import 'package:gch_cityservice/services/authentication.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_places_picker/google_places_picker.dart';
+import 'package:latlong/latlong.dart' as LutLonh;
 
 void main() {
+
+  LutLonh.Distance dis = LutLonh.Distance();
+
   var location = Location();
   location.onLocationChanged().listen((LocationData currentLocation) {
     lastPosition = LatLng(currentLocation.latitude, currentLocation.longitude);
     for(var x in tasksSet){
-      x.distanceToUser = calcDistance(x.position, lastPosition);
+      x.distanceToUser = dis(LutLonh.LatLng(x.position.latitude, x.position.longitude),
+          LutLonh.LatLng(lastPosition.latitude, lastPosition.longitude));//calcDistance(x.position, lastPosition);
     }
     taskBloc.add(null);
     //print(currentLocation.latitude);
     //print(currentLocation.longitude);
   });
+  ///Not safe code
 
   runApp(MyApp());
 }
@@ -25,7 +30,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
-        title: 'Добрый городовой',
+        title: 'Flutter login demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
@@ -35,5 +40,3 @@ class MyApp extends StatelessWidget {
         home: RootScreen(auth: Auth()),
       );
 }
-
-ScreenUtil su;
