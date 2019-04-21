@@ -33,8 +33,10 @@ class BottomDrawerCard extends StatelessWidget {
           children: <Widget>[
             Column(
               children: <Widget>[
-                Text(task.title??"Неизвестно", style: TextStyle(fontSize: 20),),
-                Text(intToCategory(task.cathegory?.index)??"Нет", style: TextStyle(fontSize: 10),),
+                Divider(),
+                //Text(task.title??"Неизвестно", style: TextStyle(fontSize: 20),),
+                Text(intToCategory(task.cathegory?.index)??"Нет", style: TextStyle(fontSize: 20),),
+                Divider(),
                 Container(
                     height: 40,
                     width: 150,
@@ -43,7 +45,7 @@ class BottomDrawerCard extends StatelessWidget {
                         borderRadius: BorderRadius.only(topRight: Radius.circular(8.0), bottomRight: Radius.circular(8.0))
                     ),
                     child: Center(
-                      child: Text(task.title, style: TextStyle(color: Colors.white, fontSize: 20),),
+                      child: Text(task.title, style: TextStyle(color: Colors.white, fontSize: 30),),
                     )
                 ),
               ],
