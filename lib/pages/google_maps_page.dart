@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:gch_cityservice/bottom_drawer.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gch_cityservice/task_details.dart';
 import 'package:gch_cityservice/screens/home_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:math';
-import 'package:location/location.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+
+double panelHeightClosed = 95;
 
 class MyMapWidget extends StatefulWidget {
   @override
@@ -25,7 +28,7 @@ class MyMapWidgetState extends State<MyMapWidget> {
     _lastCameraPosition = position;
   }
 
-  Widget bottomDrawerPanel = BottomDrawerCard(MyTask());
+  double bordersRadius = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +53,25 @@ class MyMapWidgetState extends State<MyMapWidget> {
                 )),
         StreamBuilder(
           stream: bottomCardBloc.stream,
-          builder: (context, snapshot) => snapshot.data != null ? BottomDrawerCard(snapshot.data) : Container(),
+          builder: (context, snapshot) => snapshot.data != null
+              ? SlidingUpPanel(
+                  maxHeight: ScreenUtil.getInstance().setHeight(1800),
+                  minHeight: panelHeightClosed,
+                  parallaxEnabled: true,
+                  backdropEnabled: true,
+                  parallaxOffset: .5,
+                  panel: TaskDetails(snapshot.data),
+                  onPanelSlide: (pos) {
+                    setState(() {
+                      bordersRadius = pos;
+                    });
+                  },
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular((1 - bordersRadius) * 20),
+                    topRight: Radius.circular((1 - bordersRadius) * 20),
+                  ),
+                )
+              : Container(),
         ),
       ],
     );
@@ -74,7 +95,7 @@ onMarkerTap(MyTask task) {
 
 final bottomCardBloc = StreamController<MyTask>.broadcast();
 
-AppBar myMapAppBar(){
+AppBar myMapAppBar() {
   return AppBar(
     title: Text("MyMap"),
   );
@@ -84,7 +105,7 @@ AppBar myMapAppBar(){
 LatLng lastPosition = LatLng(56.327752241668215, 44.00208346545696);
 
 ///in meters
-int calcDistance(LatLng from, LatLng to){
+int calcDistance(LatLng from, LatLng to) {
   final double EARTH_RADIUS = 6371009;
 //  print(from.latitude.toString()+" "+from.longitude.toString());
 //  print(to.latitude.toString()+" "+to.longitude.toString());
@@ -95,12 +116,15 @@ int calcDistance(LatLng from, LatLng to){
 //  double r2 = cos(toRadians(from.latitude))*cos(toRadians(to.latitude))*cos(toRadians(from.longitude-to.longitude));
 //  print(r2.toString());
 
-  double r4 = pow(sin( (toRadians(from.latitude)-toRadians(to.latitude))/2 ), 2);
+  double r4 =
+      pow(sin((toRadians(from.latitude) - toRadians(to.latitude)) / 2), 2);
 //  print(r4.toString());
-  double r5 = cos( toRadians(from.latitude))*cos(toRadians(to.latitude))*pow( sin( (toRadians(from.longitude)-toRadians(to.longitude))/2), 2 );
+  double r5 = cos(toRadians(from.latitude)) *
+      cos(toRadians(to.latitude)) *
+      pow(sin((toRadians(from.longitude) - toRadians(to.longitude)) / 2), 2);
 //  print(r5.toString());
 
-  double r6 = 2*asin(sqrt(r4+r5))*EARTH_RADIUS;
+  double r6 = 2 * asin(sqrt(r4 + r5)) * EARTH_RADIUS;
 //  print(r6.toString());
 //  double r3 =sin(toRadians(from.latitude) * sin(toRadians(to.latitude)));
 //  print(r3.toString());
@@ -110,7 +134,6 @@ int calcDistance(LatLng from, LatLng to){
   return r6.round();
 }
 
-double toRadians(double z){
-  return z*pi/180;
+double toRadians(double z) {
+  return z * pi / 180;
 }
-
