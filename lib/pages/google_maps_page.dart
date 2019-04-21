@@ -81,12 +81,8 @@ AppBar myMapAppBar(){
   );
 }
 
-
-var location = new Location();
-
-
 ////TO?DO: update somewhere
-//LatLng lastPosition = LatLng(56.327752241668215, 44.00208346545696);
+LatLng lastPosition = LatLng(56.327752241668215, 44.00208346545696);
 
 ///in meters
 int calcDistance(LatLng from, LatLng to){
