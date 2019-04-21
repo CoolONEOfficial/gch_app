@@ -113,7 +113,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             task.snippet = snippetController.text;
 
             final nextId =
-                (await databaseReference.child("tasks").once()).value.length;
+                (await databaseReference.child("tasks").once()).value?.length ?? 0;
 
             await task
                 .toDatabase(databaseReference.child("tasks").child(nextId.toString()));
