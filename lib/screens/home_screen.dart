@@ -7,6 +7,7 @@ import 'package:gch_cityservice/screens/add_task_screen.dart';
 import 'package:gch_cityservice/services/authentication.dart';
 import 'package:gch_cityservice/widget_templates.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 int activeScreen = 0;
 
@@ -60,7 +61,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   task["position"]["lat"],
                   task["position"]["lng"],
                 ),
-                task["photoUrls"]
+                task["photoUrls"],
+                task["address"],
               ),
 
               //todo get urls
@@ -223,6 +225,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
 final databaseReference = FirebaseDatabase.instance.reference();
 
+final storageReference = FirebaseStorage.instance.ref();
+
 enum Category { None, Road, Vandal, Transport, Litter, Lights }
 
 class MyTask {
@@ -231,7 +235,7 @@ class MyTask {
   MyTask.defaultClass(this.id, this.position, this.title, this.snippet);
 
   MyTask.pro(this.id, this.distanceToUser, this.title, this.snippet,
-      this.category, this.sendTime, this.position, this.picUrls);
+      this.category, this.sendTime, this.position, this.picUrls, this.address);
 
   String    title = 'default title';
   String    id = '1234567890';
@@ -256,6 +260,7 @@ class MyTask {
       },
       "category": category.index,
       "sendTime": DateTime.now().millisecondsSinceEpoch,
+      "photoUrls": picUrls,
     });
   }
 

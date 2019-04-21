@@ -1,10 +1,13 @@
-import 'package:firebase_database/firebase_database.dart';
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gch_cityservice/pages/section_list_page.dart';
 import 'package:gch_cityservice/screens/home_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_places_picker/google_places_picker.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddTaskScreen extends StatefulWidget {
   @override
@@ -19,6 +22,23 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   final addressController = TextEditingController(),
       titleController = TextEditingController(),
       snippetController = TextEditingController();
+
+  Future<String> uploadPic(String filename) async {
+    //Get the file from the image picker and store it
+    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    //Create a reference to the location you want to upload to in firebase
+    StorageReference reference = storageReference.child("tasks/" + filename);
+
+    //Upload the file to firebase
+    StorageUploadTask uploadTask = reference.putFile(image);
+
+    // Waits till the file is uploaded then stores the download url
+    final location = await (await uploadTask.onComplete).ref.getDownloadURL();
+
+    //returns the download url
+    return location;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +62,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         ))
                     .toList(),
                 onChanged: (catId) {
+                  categoryId = catId;
                   setState(() {
                     task.category = Category.values[catId];
                   });
@@ -105,6 +126,19 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 )),
           ),
         ),
+        FlatButton(
+          child: Text("dsfsdf"),
+          onPressed: () async {
+            task.picUrls.add((await uploadPic(
+                (((await databaseReference.child("tasks").once())
+                                .value
+                                ?.length ??
+                            0)
+                        .toString() +
+                    '_' +
+                    task.picUrls.length.toString()))));
+          },
+        ),
         Expanded(child: Container()),
         FlatButton(
           child: Text("Добавить", style: Theme.of(context).textTheme.title),
@@ -113,10 +147,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             task.snippet = snippetController.text;
 
             final nextId =
-                (await databaseReference.child("tasks").once()).value?.length ?? 0;
+                (await databaseReference.child("tasks").once()).value?.length ??
+                    0;
 
-            await task
-                .toDatabase(databaseReference.child("tasks").child(nextId.toString()));
+            await task.toDatabase(
+                databaseReference.child("tasks").child(nextId.toString()));
             Navigator.pop(context);
           },
         ),

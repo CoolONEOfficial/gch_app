@@ -10,9 +10,7 @@ import 'package:latlong/latlong.dart' as LutLonh;
 
 var location = Location();
 
-
 void main() {
-
   LutLonh.Distance dis = LutLonh.Distance();
   location.onLocationChanged().listen((LocationData currentLocation) {
     lastPosition = LatLng(currentLocation.latitude, currentLocation.longitude);
