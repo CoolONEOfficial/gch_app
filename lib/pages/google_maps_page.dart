@@ -49,9 +49,8 @@ class MyMapWidgetState extends State<MyMapWidget> {
                   },
                 )),
         StreamBuilder(
-          initialData: MyTask(),
           stream: bottomCardBloc.stream,
-          builder: (context, snapshot) => BottomDrawerCard(snapshot.data),
+          builder: (context, snapshot) => snapshot.data != null ? BottomDrawerCard(snapshot.data) : Container(),
         ),
       ],
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gch_cityservice/pages/google_maps_page.dart';
 import 'package:gch_cityservice/screens/home_screen.dart';
 import 'package:gch_cityservice/screens/root_screen.dart';
@@ -8,35 +9,37 @@ import 'package:location/location.dart';
 import 'package:latlong/latlong.dart' as LutLonh;
 
 void main() {
-
   LutLonh.Distance dis = LutLonh.Distance();
 
   var location = Location();
   location.onLocationChanged().listen((LocationData currentLocation) {
     lastPosition = LatLng(currentLocation.latitude, currentLocation.longitude);
-    for(var x in tasksSet){
-      x.distanceToUser = dis(LutLonh.LatLng(x.position.latitude, x.position.longitude),
-          LutLonh.LatLng(lastPosition.latitude, lastPosition.longitude));//calcDistance(x.position, lastPosition);
+    for (var x in tasksSet) {
+      x.distanceToUser = dis(
+          LutLonh.LatLng(x.position.latitude, x.position.longitude),
+          LutLonh.LatLng(lastPosition.latitude, lastPosition.longitude));
     }
     taskBloc.add(null);
-    //print(currentLocation.latitude);
-    //print(currentLocation.longitude);
   });
-  ///Not safe code
 
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => MaterialApp(
-        title: 'Flutter login demo',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          fontFamily: 'BebasNeue',
-          accentColor: const Color.fromRGBO(0x7e, 0x00, 0xff, 1),//0x7e00ff),
-        ),
-        home: RootScreen(auth: Auth()),
-      );
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter login demo',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        fontFamily: 'BebasNeue',
+        accentColor: const Color.fromRGBO(0x7e, 0x00, 0xff, 1),
+      ),
+      home: Builder(builder: (ctx) {
+        ScreenUtil.instance = ScreenUtil(width: 1080, height: 1920)..init(ctx);
+        return RootScreen(auth: Auth());
+      },),
+    );
+  }
 }

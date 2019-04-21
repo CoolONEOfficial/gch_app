@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gch_cityservice/main.dart';
 import 'package:gch_cityservice/screens/home_screen.dart';
 import 'package:gch_cityservice/screens/login_signup_screen.dart';
 import 'package:gch_cityservice/services/authentication.dart';
@@ -79,8 +78,6 @@ class _RootScreenState extends State<RootScreen> {
       height: 1920,
       allowFontScaling: true,
     )..init(context);
-    su = ScreenUtil.getInstance();
-
     switch (authStatus) {
       case AuthStatus.NOT_DETERMINED:
         return _buildWaitingScreen();
