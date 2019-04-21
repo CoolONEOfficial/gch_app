@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gch_cityservice/bottom_drawer.dart';
-import 'package:gch_cityservice/main.dart';
 import 'package:gch_cityservice/screens/home_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -70,16 +69,6 @@ class MyMapWidgetState extends State<MyMapWidget> {
 
 onMarkerTap(MyTask task) {
   bottomCardBloc.add(task);
-}
-
-class GoodTask extends MyTask {
-  GoodTask(String id, LatLng position, String title, String snippet)
-      : super.defaultClass(id, position, title, snippet);
-}
-
-class BadTask extends MyTask {
-  BadTask(String id, LatLng position, String title, String snippet)
-      : super.defaultClass(id, position, title, snippet);
 }
 
 final bottomCardBloc = StreamController<MyTask>.broadcast();

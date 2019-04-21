@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gch_cityservice/pages/google_maps_page.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -213,16 +211,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
 final databaseReference = FirebaseDatabase.instance.reference();
 
+enum Categoty {None, Road, Vandal, Transport, Litter, Lights}
+
 class MyTask {
   MyTask();
 
   MyTask.defaultClass(this.id, this.position, this.title, this.snippet);
 
   String title = 'default title';
-  String snippet = 'default snippet';
   String id = '1234567890';
-
   LatLng position = LatLng(56.327752241668215, 44.00208346545696);
+
+  //TODO: add more fields to database
+  String snippet = 'default snippet';
+  Categoty cathegory = Categoty.None;
+  int sendTime = DateTime.utc(2019).millisecondsSinceEpoch;
 
   Marker toMarker() {
     var myDescriptor =
@@ -243,6 +246,17 @@ class MyTask {
     );
   }
 }
+
+class GoodTask extends MyTask {
+  GoodTask(String id, LatLng position, String title, String snippet)
+      : super.defaultClass(id, position, title, snippet);
+}
+
+class BadTask extends MyTask {
+  BadTask(String id, LatLng position, String title, String snippet)
+      : super.defaultClass(id, position, title, snippet);
+}
+
 
 Set<MyTask> tasksSet = Set();
 final taskBloc = StreamController<void>.broadcast();

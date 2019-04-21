@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
           fontFamily: 'BebasNeue',
+          accentColor: const Color.fromRGBO(0x7e, 0x00, 0xff, 1),//0x7e00ff),
         ),
         home: RootScreen(auth: Auth()),
       );
