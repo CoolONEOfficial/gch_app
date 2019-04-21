@@ -14,30 +14,32 @@ class IntroScreen extends StatelessWidget {
       [
         PageViewModel(
             pageColor: const Color(0xFF03A9F4),
-            // iconImageAssetPath: 'assets/air-hostess.png',
-            bubble: Image.asset('assets/air-hostess.png'),
             body: Text(
-              'Haselfree  booking  of  flight  tickets  with  full  refund  on  cancelation',
+              'ФОРМИРУЙ И УЧАВСТВУЙ В СОВМЕСТНЫХ ОБРАЩЕНИЯХ КО ВЛАСТИ',
             ),
-            title: Text(
-              'Flights',
+            title: Padding(
+              padding: EdgeInsets.only(top: 20),
+              child: Text('ВМЕСТЕ НАС СЛЫШНО', textAlign: TextAlign.center, style: Theme.of(context).textTheme.title.merge(TextStyle(color: Colors.white, fontSize: 50)),),
             ),
             textStyle: TextStyle(fontFamily: 'MyFont', color: Colors.white),
             mainImage: Image.asset(
-              'assets/airplane.png',
+              'assets/images/intro/intro_1.png',
               height: 285.0,
               width: 285.0,
               alignment: Alignment.center,
             )),
         PageViewModel(
           pageColor: const Color(0xFF8BC34A),
-          iconImageAssetPath: 'assets/waiter.png',
+          //iconImageAssetPath: 'assets/waiter.png',
           body: Text(
-            'We  work  for  the  comfort ,  enjoy  your  stay  at  our  beautiful  hotels',
+            'ПОЛУЧАЙ УВЕДОМЛЕНИЯ ПОСЛЕ ВЫПОЛНЕНИЯ ЗАПРОСА',
           ),
-          title: Text('Hotels'),
+          title: Padding(
+            padding: EdgeInsets.only(top: 20),
+            child: Text('ГОВОРИ С ВЛАСТЬЮ', style: Theme.of(context).textTheme.title.merge(TextStyle(color: Colors.white, fontSize: 50)),),
+          ),
           mainImage: Image.asset(
-            'assets/hotel.png',
+            'assets/images/intro/intro_2.png',
             height: 285.0,
             width: 285.0,
             alignment: Alignment.center,
@@ -48,11 +50,14 @@ class IntroScreen extends StatelessWidget {
           pageColor: const Color(0xFF607D8B),
           iconImageAssetPath: 'assets/taxi-driver.png',
           body: Text(
-            'Easy  cab  booking  at  your  doorstep  with  cashless  payment  system',
+            'НАЧНИ УЧАВСТВОВАТЬ В РАЗВИТИИ ГОРОДА',
           ),
-          title: Text('Cabs'),
+          title: Padding(
+            padding: EdgeInsets.only(top: 20),
+            child: Text('ДЕЙСТВУЙ', style: Theme.of(context).textTheme.title.merge(TextStyle(color: Colors.white, fontSize: 50)),),
+          ),
           mainImage: Image.asset(
-            'assets/taxi.png',
+            'assets/images/intro/intro_3.png',
             height: 285.0,
             width: 285.0,
             alignment: Alignment.center,
@@ -60,6 +65,8 @@ class IntroScreen extends StatelessWidget {
           textStyle: TextStyle(fontFamily: 'MyFont', color: Colors.white),
         ),
       ],
+      skipText: Container(),
+      doneText: Text("Готово"),
       onTapDoneButton: () {
         callback();
       },
