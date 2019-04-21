@@ -117,20 +117,20 @@ class SectionListPageState extends State<SectionListPage> {
     monthString = day.toString()+"."+monthString;
     return monthString;
   }
+}
 
-  String intToCategory(int index){
-    String category;
-    switch(index){
-      case 0: category = "Нет"; break;
-      case 1: category = "Дороги"; break;
-      case 2: category = "Вандализм"; break;
-      case 3: category = "Транспорт"; break;
-      case 4: category = "Мусор"; break;
-      case 5: category = "Освещение"; break;
-      default: category = "Undefined";
-    }
-    return category;
+String intToCategory(int index){
+  String category;
+  switch(index){
+    case 0: category = "Нет"; break;
+    case 1: category = "Дороги"; break;
+    case 2: category = "Вандализм"; break;
+    case 3: category = "Транспорт"; break;
+    case 4: category = "Мусор"; break;
+    case 5: category = "Освещение"; break;
+    default: category = "Undefined";
   }
+  return category;
 }
 
 AppBar myListAppBar() {

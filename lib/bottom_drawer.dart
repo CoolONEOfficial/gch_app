@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gch_cityservice/pages/section_list_page.dart';
 import 'package:gch_cityservice/screens/home_screen.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -30,46 +31,48 @@ class BottomDrawerCard extends StatelessWidget {
         height: _panelHeightClosed,
         child: Row(
           children: <Widget>[
+            Column(
+              children: <Widget>[
+                Text(task.title??"Неизвестно", style: TextStyle(fontSize: 20),),
+                Text(intToCategory(task.cathegory?.index)??"Нет", style: TextStyle(fontSize: 10),)
+              ],
+            ),
             Expanded(
               child: Text(task.title),
             ),
             Flexible(
-              child: Text(task.snippet),
+              child: Text(task.snippet??"Пусто"),
             )
           ],
         ));
   }
 
   Widget _widgetGallery() {
-    return Flexible(
+    return Container(
+      height: 100,
       child: ListView(
         // This next line does the trick.
         scrollDirection: Axis.horizontal,
         children: <Widget>[
           Container(
             width: 100.0,
-            height: 100.0,
-            color: Colors.red,
+            child: Image.network("http://sim-kr.ru/UserImages/37cd40ac.jpg"),
           ),
           Container(
             width: 100.0,
-            height: 100.0,
-            color: Colors.blue,
+            child: Image.network("http://sim-kr.ru/UserImages/37cd40ac.jpg"),
           ),
           Container(
             width: 100.0,
-            height: 100.0,
-            color: Colors.green,
+            child: Image.network("http://sim-kr.ru/UserImages/37cd40ac.jpg"),
           ),
           Container(
             width: 100.0,
-            height: 100.0,
-            color: Colors.yellow,
+            child: Image.network("http://sim-kr.ru/UserImages/37cd40ac.jpg"),
           ),
           Container(
             width: 100.0,
-            height: 100.0,
-            color: Colors.orange,
+            child: Image.network("http://sim-kr.ru/UserImages/37cd40ac.jpg"),
           ),
         ],
       ),
@@ -81,32 +84,32 @@ class BottomDrawerCard extends StatelessWidget {
         child: ListView(
       children: <Widget>[
         ListTile(
-          leading: const Icon(Icons.event_seat),
-          title: const Text('The seat for the narrator'),
+          leading: const Icon(Icons.comment),
+          title: const Text('Комментарий 1'),
         ),
         ListTile(
-          leading: const Icon(Icons.event_seat),
-          title: const Text('The seat for the narrator'),
+          leading: const Icon(Icons.comment),
+          title: const Text('Комментарий 2'),
         ),
         ListTile(
-          leading: const Icon(Icons.event_seat),
-          title: const Text('The seat for the narrator'),
+          leading: const Icon(Icons.comment),
+          title: const Text('Комментарий 3'),
         ),
         ListTile(
-          leading: const Icon(Icons.event_seat),
-          title: const Text('The seat for the narrator'),
+          leading: const Icon(Icons.comment),
+          title: const Text('Комментарий 4'),
         ),
         ListTile(
-          leading: const Icon(Icons.event_seat),
-          title: const Text('The seat for the narrator'),
+          leading: const Icon(Icons.comment),
+          title: const Text('Комментарий 5'),
         ),
         ListTile(
-          leading: const Icon(Icons.event_seat),
-          title: const Text('The seat for the narrator'),
+          leading: const Icon(Icons.comment),
+          title: const Text('Комментарий 6'),
         ),
         ListTile(
-          leading: const Icon(Icons.event_seat),
-          title: const Text('The seat for the narrator'),
+          leading: const Icon(Icons.comment),
+          title: const Text('Комментарий 7'),
         ),
       ],
     ));
