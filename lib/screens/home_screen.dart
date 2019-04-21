@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gch_cityservice/pages/google_maps_page.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:gch_cityservice/pages/section_list_page.dart';
+import 'package:gch_cityservice/screens/add_task_screen.dart';
 import 'package:gch_cityservice/services/authentication.dart';
 import 'package:gch_cityservice/widget_templates.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -47,18 +48,18 @@ class _HomeScreenState extends State<HomeScreen> {
           for (int taskId = 0; taskId < _tasks.length; taskId++) {
             var task = _tasks[taskId];
 
-
             set.add(
               MyTask.pro(
                 taskId.toString(),
-                calcDistance(
-                    LatLng(task["position"]["lat"], task["position"]["lng"]),
-                    lastPosition
-                ),
+                -1,
                 task["name"],
                 task["snippet"],
-                task["category"],
-                task["time"]
+                Category.values[task["category"]],
+                task["time"],
+                LatLng(
+                  task["position"]["lat"],
+                  task["position"]["lng"],
+                ),
               ),
             );
           }
@@ -103,7 +104,8 @@ class _HomeScreenState extends State<HomeScreen> {
         // return object of type Dialog
         return AlertDialog(
           title: Text("Плдтверждение аккаунта"),
-          content: Text("Перейдите по ссылке в письме отправленном на вашу электронную почту"),
+          content: Text(
+              "Перейдите по ссылке в письме отправленном на вашу электронную почту"),
           actions: <Widget>[
             FlatButton(
               child: Text("Отправить письмо еще раз"),
@@ -125,7 +127,8 @@ class _HomeScreenState extends State<HomeScreen> {
         // return object of type Dialog
         return AlertDialog(
           title: Text("Подтверждение аккаунта"),
-          content: Text("Перейдите по ссылке в письме отправленном на вашу электронную почту"),
+          content: Text(
+              "Перейдите по ссылке в письме отправленном на вашу электронную почту"),
           actions: <Widget>[
             FlatButton(
               child: Text("Ок"),
@@ -157,14 +160,16 @@ class _HomeScreenState extends State<HomeScreen> {
             future: firebaseAuth.currentUser(),
             builder: (ctx, snapshot) {
               return UserAccountsDrawerHeader(
-                  accountName: Text(snapshot.data.displayName ?? "Unknown name"),
+                  accountName:
+                      Text(snapshot.data.displayName ?? "Unknown name"),
                   accountEmail: Text(snapshot.data.email ?? "unknown@mail.com"),
                   currentAccountPicture: CircleAvatar(
                     backgroundColor:
                         Theme.of(context).platform == TargetPlatform.iOS
                             ? Colors.blue
                             : Colors.white,
-                    child: Image.network(snapshot.data.photoUrl ?? "http://www.sclance.com/pngs/image-placeholder-png/image_placeholder_png_698411.png"),
+                    child: Image.network(snapshot.data.photoUrl ??
+                        "http://www.sclance.com/pngs/image-placeholder-png/image_placeholder_png_698411.png"),
                   ));
             },
           ),
@@ -191,15 +196,21 @@ class _HomeScreenState extends State<HomeScreen> {
           ListTile(
             title: Text("Обращение"),
             trailing: Icon(Icons.add_circle),
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (ctx) => AddTaskScreen(),
+                ),
+              );
+            },
           ),
           Divider(),
           ListTile(
             title: Text("Выйти"),
             trailing: Icon(Icons.exit_to_app),
-            onTap: () {
-              _signOut();
-            },
+            onTap: () => _signOut(),
           ),
         ],
       ),
@@ -209,25 +220,39 @@ class _HomeScreenState extends State<HomeScreen> {
 
 final databaseReference = FirebaseDatabase.instance.reference();
 
-enum Categoty {None, Road, Vandal, Transport, Litter, Lights}
+enum Category { None, Road, Vandal, Transport, Litter, Lights }
 
 class MyTask {
   MyTask();
 
   MyTask.defaultClass(this.id, this.position, this.title, this.snippet);
 
-  MyTask.pro(this.id, this.distanceToUser, this.title, this.snippet, this.category, this.sendTime);
+  MyTask.pro(this.id, this.distanceToUser, this.title, this.snippet,
+      this.category, this.sendTime, this.position);
 
   String title = 'default title';
   String id = '1234567890';
   LatLng position = LatLng(56.327752241668215, 44.00208346545696);
-
+  String address = "Unknown address";
   int distanceToUser = -1;
-
-  //TODO: add more fields to database
   String snippet = 'default snippet';
-  Categoty category = Categoty.None;
+  Category category = Category.None;
   int sendTime = DateTime.utc(2019).millisecondsSinceEpoch;
+
+  Future toDatabase(DatabaseReference ref) async {
+    return ref.set({
+      "title": title,
+      "snippet": snippet,
+      "votes": [(await firebaseAuth.currentUser()).uid],
+      "address": address,
+      "position": {
+        "lat": position.latitude,
+        "lng": position.longitude,
+      },
+      "category": category.index,
+      "sendTime": DateTime.now().millisecondsSinceEpoch,
+    });
+  }
 
   Marker toMarker() {
     var myDescriptor =
@@ -258,7 +283,6 @@ class BadTask extends MyTask {
   BadTask(String id, LatLng position, String title, String snippet)
       : super.defaultClass(id, position, title, snippet);
 }
-
 
 Set<MyTask> tasksSet = Set();
 final taskBloc = StreamController<void>.broadcast();

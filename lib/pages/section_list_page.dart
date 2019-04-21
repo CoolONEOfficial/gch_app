@@ -1,8 +1,6 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:gch_cityservice/screens/home_screen.dart';
-import 'package:gch_cityservice/screens/task_details_screen.dart';
 import 'package:http/http.dart' as http;
 
 class SectionListPage extends StatefulWidget {
@@ -156,35 +154,19 @@ class SectionListPageState extends State<SectionListPage> {
   }
 }
 
-String intToCategory(int index) {
-  String category;
-  switch (index) {
-    case 0:
-      category = "Нет";
-      break;
-    case 1:
-      category = "Дороги";
-      break;
-    case 2:
-      category = "Вандализм";
-      break;
-    case 3:
-      category = "Транспорт";
-      break;
-    case 4:
-      category = "Мусор";
-      break;
-    case 5:
-      category = "Освещение";
-      break;
-    default:
-      category = "Undefined";
-  }
-  return category;
-}
+final categoryNames = [
+  "Нет",
+  "Дороги",
+  "Вандализм",
+  "Транспорт",
+  "Мусор",
+  "Освещение",
+];
+
+String intToCategory(int index) => categoryNames[index ?? 0] ?? categoryNames[0];
 
 AppBar myListAppBar() {
   return AppBar(
-    title: Text("MyList"),
+    title: Text("Список"),
   );
 }
