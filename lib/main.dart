@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gch_cityservice/pages/google_maps_page.dart';
+import 'package:gch_cityservice/screens/home_screen.dart';
 import 'package:gch_cityservice/screens/root_screen.dart';
 import 'package:gch_cityservice/services/authentication.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -10,6 +11,10 @@ void main() {
   var location = Location();
   location.onLocationChanged().listen((LocationData currentLocation) {
     lastPosition = LatLng(currentLocation.latitude, currentLocation.longitude);
+    for(var x in tasksSet){
+      x.distanceToUser = calcDistance(x.position, lastPosition);
+    }
+    taskBloc.add(null);
     //print(currentLocation.latitude);
     //print(currentLocation.longitude);
   });
