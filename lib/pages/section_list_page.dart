@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:gch_cityservice/screens/home_screen.dart';
 import 'package:gch_cityservice/screens/task_details_screen.dart';
+import 'package:http/http.dart' as http;
 
 class SectionListPage extends StatefulWidget {
   @override
@@ -24,12 +27,20 @@ class SectionListPageState extends State<SectionListPage> {
   Widget myListTile(BuildContext ctx, int index) {
     MyTask tsk = tasksSet.toList().elementAt(index);
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (ctx) => TaskDetailsScreen(task: tsk),
-            ));
+      onTap: () async {
+        var url = "http://192.168.43.211:8080/gch_server_war_exploded/test";
+        var client = http.Client();
+        var request = http.Request('POST', Uri.parse(url))
+          ..bodyFields = {
+            'uuid': 'sdfsd',
+            'taskid': tsk.id,
+          };
+        client
+            .send(request)
+            .then((response) => response.stream
+                .bytesToString()
+                .then((value) => print(value.toString())))
+            .catchError((error) => print(error.toString()));
       },
       child: Card(
           elevation: 10,
@@ -43,7 +54,6 @@ class SectionListPageState extends State<SectionListPage> {
                       width: 100,
                       decoration: BoxDecoration(
                           color: Theme.of(context).accentColor,
-                          //const Color.fromRGBO(0x7e, 0x00, 0xff, 1),//0x7e00ff),
                           borderRadius: BorderRadius.only(
                               topRight: Radius.circular(8.0),
                               bottomRight: Radius.circular(8.0))),
@@ -85,7 +95,7 @@ class SectionListPageState extends State<SectionListPage> {
                       children: <Widget>[
                         Divider(),
                         Text(
-                          intToCategory(tsk.cathegory?.index),
+                          intToCategory(tsk.category?.index),
                           style: TextStyle(
                               color: Theme.of(context)
                                   .primaryColor /*const Color.fromRGBO(0x00, 0x71, 0x7a, 1)*/),

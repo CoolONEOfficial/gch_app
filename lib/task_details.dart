@@ -34,7 +34,7 @@ class _TaskDetailsState extends State<TaskDetails> {
                 Divider(),
                 //Text(task.title??"Неизвестно", style: TextStyle(fontSize: 20),),
                 Text(
-                  intToCategory(widget.task.cathegory?.index) ?? "Нет",
+                  intToCategory(widget.task.category?.index) ?? "Нет",
                   style: TextStyle(fontSize: 20),
                 ),
                 Divider(),

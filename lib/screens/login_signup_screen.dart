@@ -52,15 +52,20 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
           userId = await widget.auth.signIn(_email, _password);
           print('Signed in: $userId');
         } else {
-          var _address, _number;
+          var _address, _number, _fullName;
 
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (ctx) => SigninDetailsScreen(
-                        callback: (address, phoneNumber) {
+                        callback: (
+                          address,
+                          phoneNumber,
+                          fullName,
+                        ) {
                           _address = address;
                           _number = phoneNumber;
+                          _fullName = fullName;
 
                           Navigator.pop(context);
                         },
@@ -77,6 +82,7 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
                               .set({
                             "address": _address,
                             "phoneNumber": _number,
+                            "fullName": _fullName
                           });
                           await _showVerifyEmailSentDialog();
 
@@ -84,7 +90,6 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
                           print('Signed up user: $userId');
                         },
                       ))));
-
         }
         setState(() {
           _isLoading = false;
@@ -162,7 +167,8 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
         // return object of type Dialog
         return AlertDialog(
           title: Text("Подтвердите аккаунт"),
-          content: Text("Перейдите по ссылке в письме отправленном на вашу электронную почту"),
+          content: Text(
+              "Перейдите по ссылке в письме отправленном на вашу электронную почту"),
           actions: <Widget>[
             FlatButton(
               child: Text("Ок"),
@@ -261,7 +267,8 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
               Icons.lock,
               color: Colors.grey,
             )),
-        validator: (value) => value.isEmpty ? 'Необходимо заполнить пароль' : null,
+        validator: (value) =>
+            value.isEmpty ? 'Необходимо заполнить пароль' : null,
         onSaved: (value) => _password = value,
       ),
     );

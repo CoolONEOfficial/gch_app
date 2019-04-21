@@ -216,7 +216,7 @@ class MyTask {
 
   MyTask.defaultClass(this.id, this.position, this.title, this.snippet);
 
-  MyTask.pro(this.id, this.distanceToUser, this.title, this.snippet, this.cathegory, this.sendTime);
+  MyTask.pro(this.id, this.distanceToUser, this.title, this.snippet, this.category, this.sendTime);
 
   String title = 'default title';
   String id = '1234567890';
@@ -226,7 +226,7 @@ class MyTask {
 
   //TODO: add more fields to database
   String snippet = 'default snippet';
-  Categoty cathegory = Categoty.None;
+  Categoty category = Categoty.None;
   int sendTime = DateTime.utc(2019).millisecondsSinceEpoch;
 
   Marker toMarker() {
