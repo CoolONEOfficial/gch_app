@@ -80,6 +80,8 @@ AppBar myMapAppBar(){
   );
 }
 
+
+//TODO: update somewhere
 LatLng lastPosition;
 
 ///in meters
