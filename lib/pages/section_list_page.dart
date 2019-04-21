@@ -54,7 +54,7 @@ class SectionListPageState extends State<SectionListPage> {
                           borderRadius: BorderRadius.only(topLeft: Radius.circular(8.0), bottomLeft: Radius.circular(8.0))
                       ),
                       child: Center(
-                        child: Text( dateText(tsk.sendTime), style: TextStyle(color: Colors.white),),
+                        child: Text( dateText(   tsk.sendTime ?? DateTime.utc(2019).millisecondsSinceEpoch    ), style: TextStyle(color: Colors.white),),
                       )
                   ),
                 ],
@@ -71,7 +71,7 @@ class SectionListPageState extends State<SectionListPage> {
                         Divider(),
                         Text(intToCategory(tsk.cathegory?.index), style: TextStyle(color: Theme.of(context).primaryColor/*const Color.fromRGBO(0x00, 0x71, 0x7a, 1)*/),),
                         Divider(),
-                        Text(tsk.snippet, maxLines: 3, overflow: TextOverflow.ellipsis, style: TextStyle(color: const Color.fromRGBO(0x8e, 0x8e, 0x8e, 1)),),
+                        Text(tsk.snippet??"Ясно хуита", maxLines: 3, overflow: TextOverflow.ellipsis, style: TextStyle(color: const Color.fromRGBO(0x8e, 0x8e, 0x8e, 1)),),
                         Divider(),
                         Text("${tsk.distanceToUser} метр(ов) от вас", style: TextStyle(color: Theme.of(context).primaryColor),),
                         Divider(),
@@ -85,9 +85,10 @@ class SectionListPageState extends State<SectionListPage> {
                         child: Container(
                           width: 100,
                           height: 100,
-                          child: Placeholder(
-                            color: Theme.of(context).accentColor,
-                          ),
+                          child: Image.network("http://sim-kr.ru/UserImages/37cd40ac.jpg"),
+//                          Placeholder(
+//                            color: Theme.of(context).accentColor,
+//                          ),
                         )
                       )
                     ],
@@ -104,7 +105,10 @@ class SectionListPageState extends State<SectionListPage> {
   }
 
   String dateText(int secs){
-    int day = DateTime.fromMillisecondsSinceEpoch(secs)?.day;
+    print(secs.toString());
+    var b = DateTime.fromMillisecondsSinceEpoch(secs);
+    int day = b.day;
+    //int day = DateTime.fromMillisecondsSinceEpoch(secs)?.day;
     int month = DateTime.fromMillisecondsSinceEpoch(secs)?.month;
     String monthString = month.toString();
     if(month < 10){
@@ -134,3 +138,6 @@ AppBar myListAppBar() {
     title: Text("MyList"),
   );
 }
+
+
+///http://sim-kr.ru/UserImages/37cd40ac.jpg

@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:gch_cityservice/pages/google_maps_page.dart';
 import 'package:gch_cityservice/screens/root_screen.dart';
 import 'package:gch_cityservice/services/authentication.dart';
+import 'package:location/location.dart';
 
 void main() {
+
+  location.onLocationChanged().listen((LocationData currentLocation) {
+    print(currentLocation.latitude);
+    print(currentLocation.longitude);
+  });
+  ///Not safe code
+
   runApp(MyApp());
 }
 
