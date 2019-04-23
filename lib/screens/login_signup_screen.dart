@@ -210,7 +210,7 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
             fontSize: 13.0,
             color: Colors.red,
             height: 1.0,
-            fontWeight: FontWeight.w300),
+            fontWeight: FontWeight.w600),
       );
     } else {
       return Container(
@@ -278,9 +278,9 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
     return FlatButton(
       child: _formMode == FormMode.LOGIN
           ? Text('Создать аккаунт',
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300))
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600))
           : Text('Уже есть аккаунт? Войдите',
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300)),
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600)),
       onPressed: _formMode == FormMode.LOGIN
           ? _changeFormToSignUp
           : _changeFormToLogin,

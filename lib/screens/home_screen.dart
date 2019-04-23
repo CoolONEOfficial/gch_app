@@ -46,8 +46,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
           Set<MyTask> set = Set<MyTask>();
 
-          for (int taskId = 0; taskId < _tasks.length; taskId++) {
+          for (int taskId = 0; taskId < _tasks?.length ?? 0; taskId++) {
             var task = _tasks[taskId];
+
+            var cat = task["category"];
+
+            if(cat is double)
+              cat = (cat as double).toInt();
 
             set.add(
               MyTask.pro(
@@ -55,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 -1,
                 task["title"],
                 task["snippet"],
-                Category.values[ (task["category"] as double).toInt()  ],
+                Category.values[ cat  ],
                 task["time"],
                 LatLng(
                   task["position"]["lat"],

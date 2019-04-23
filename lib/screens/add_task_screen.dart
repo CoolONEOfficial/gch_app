@@ -127,7 +127,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           ),
         ),
         FlatButton(
-          child: Text("dsfsdf"),
+          child: Text("Добавить картинку"),
           onPressed: () async {
             task.picUrls.add((await uploadPic(
                 (((await databaseReference.child("tasks").once())
