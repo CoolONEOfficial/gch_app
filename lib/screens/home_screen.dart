@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:gch_cityservice/category.dart';
 import 'package:gch_cityservice/pages/google_maps_page.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:gch_cityservice/pages/section_list_page.dart';
@@ -51,8 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             var cat = task["category"];
 
-            if(cat is double)
-              cat = (cat as double).toInt();
+            if (cat is double) cat = (cat as double).toInt();
 
             set.add(
               MyTask.pro(
@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 -1,
                 task["title"],
                 task["snippet"],
-                Category.values[ cat  ],
+                Category.values[cat],
                 task["time"],
                 LatLng(
                   task["position"]["lat"],
@@ -232,8 +232,6 @@ final databaseReference = FirebaseDatabase.instance.reference();
 
 final storageReference = FirebaseStorage.instance.ref();
 
-enum Category { None, Road, Vandal, Transport, Litter, Lights }
-
 class MyTask {
   MyTask();
 
@@ -242,16 +240,17 @@ class MyTask {
   MyTask.pro(this.id, this.distanceToUser, this.title, this.snippet,
       this.category, this.sendTime, this.position, this.picUrls, this.address);
 
-  String    title = 'default title';
-  String    id = '1234567890';
-  LatLng    position = LatLng(56.327752241668215, 44.00208346545696);
-  String    address = "Unknown address";
-  int       distanceToUser = -1;
-  String    snippet = 'default snippet';
-  Category  category = Category.None;
-  int       sendTime = DateTime.utc(2019).millisecondsSinceEpoch;
+  String title = 'default title';
+  String id = '1234567890';
+  LatLng position = LatLng(56.327752241668215, 44.00208346545696);
+  String address = "Unknown address";
+  int distanceToUser = -1;
+  String snippet = 'default snippet';
+  Category category = Category.Other;
+  int sendTime = DateTime.utc(2019).millisecondsSinceEpoch;
+
   //bool      checkedByUser = false;
-  List<dynamic>  picUrls = [];
+  List<dynamic> picUrls = [];
 
   Future toDatabase(DatabaseReference ref) async {
     return ref.set({

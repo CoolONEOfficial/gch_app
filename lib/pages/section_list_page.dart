@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gch_cityservice/category.dart';
 import 'package:gch_cityservice/screens/home_screen.dart';
 import 'package:gch_cityservice/screens/task_details_screen.dart';
 import 'package:gch_cityservice/services/authentication.dart';
@@ -96,7 +97,7 @@ class SectionListPageState extends State<SectionListPage> {
                         ),
                         Divider(),
                         Text(
-                          tsk.snippet ?? "Ясно хуита",
+                          tsk.snippet ?? "Нет описания",
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -123,7 +124,6 @@ class SectionListPageState extends State<SectionListPage> {
                         height: 100,
                         child: Image.network(
                             tsk.picUrls.isNotEmpty ? tsk.picUrls[0] : ""),
-                        // "http://sim-kr.ru/UserImages/37cd40ac.jpg"),
                       ))
                     ],
                   ),
@@ -150,18 +150,6 @@ class SectionListPageState extends State<SectionListPage> {
     return monthString;
   }
 }
-
-final categoryNames = [
-  "Нет",
-  "Дороги",
-  "Вандализм",
-  "Транспорт",
-  "Мусор",
-  "Освещение",
-];
-
-String intToCategory(int index) =>
-    categoryNames[index ?? 0] ?? categoryNames[0];
 
 AppBar myListAppBar() {
   return AppBar(
